@@ -1001,16 +1001,12 @@ export const notificationAPI = {
     relatedId?: string;
     relatedType?: string;
   }) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/notifications/send`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-      });
-      return handleResponse(response);
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(`${API_BASE_URL}/notifications/send`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
   },
 
   // Broadcast notification (admin only)
@@ -1021,16 +1017,12 @@ export const notificationAPI = {
     type?: string;
     priority?: string;
   }) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/notifications/broadcast`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-      });
-      return handleResponse(response);
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(`${API_BASE_URL}/notifications/broadcast`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
   },
 };
 

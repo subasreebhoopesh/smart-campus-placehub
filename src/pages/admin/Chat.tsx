@@ -18,7 +18,6 @@ interface Student {
   branch: string;
   unreadCount: number;
 }
-
 interface Message {
   id: string;
   message: string;
@@ -48,6 +47,13 @@ export default function AdminChat() {
   useEffect(() => {
     if (selectedStudent) {
       fetchConversation(selectedStudent.id);
+      
+      // Auto-refresh conversation every 5 seconds to update read status
+      const interval = setInterval(() => {
+        fetchConversation(selectedStudent.id);
+      }, 5000);
+      
+      return () => clearInterval(interval);
     }
   }, [selectedStudent]);
 
@@ -81,10 +87,24 @@ export default function AdminChat() {
       });
       
       // Filter out students without valid userId
-      const validStudents = studentsData.filter(s => s.id);
+      const validStudents = studentsData.filter((s: any) => s.id);
       
       console.log('Valid students:', validStudents);
       setStudents(validStudents);
+      
+      // Fetch unread counts for each student
+      for (const student of validStudents) {
+        try {
+          const unreadResponse = await api.messages.getUnreadCount(student.id);
+          if (unreadResponse.count > 0) {
+            setStudents(prev => prev.map(s => 
+              s.id === student.id ? { ...s, unreadCount: unreadResponse.count } : s
+            ));
+          }
+        } catch (error) {
+          console.error(`Failed to fetch unread count for student ${student.id}:`, error);
+        }
+      }
     } catch (error) {
       console.error('Failed to fetch students:', error);
       toast({
@@ -294,15 +314,30 @@ export default function AdminChat() {
                               <p className="text-sm whitespace-pre-wrap break-words">
                                 {message.message}
                               </p>
-                              <p
-                                className={`text-xs mt-1 ${
-                                  message.isMine
-                                    ? 'text-primary-foreground/70'
-                                    : 'text-muted-foreground'
-                                }`}
-                              >
-                                {format(new Date(message.createdAt), 'h:mm a')}
-                              </p>
+                              <div className="flex items-center gap-1.5 mt-1">
+                                <p
+                                  className={`text-xs ${
+                                    message.isMine
+                                      ? 'text-primary-foreground/70'
+                                      : 'text-muted-foreground'
+                                  }`}
+                                >
+                                  {format(new Date(message.createdAt), 'h:mm a')}
+                                </p>
+                                {/* WhatsApp-style read receipts for sent messages */}
+                                {message.isMine && (
+                                  <span 
+                                    className={`text-xs font-bold ${
+                                      message.isRead 
+                                        ? 'text-blue-400' 
+                                        : 'text-primary-foreground/50'
+                                    }`}
+                                    title={message.isRead ? 'Read' : 'Delivered'}
+                                  >
+                                    ✓✓
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                         ))
