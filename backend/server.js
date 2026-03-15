@@ -1,0 +1,112 @@
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Initialize MongoDB connection
+require('./config/database-mongodb');
+
+// Import models to ensure they're registered
+require('./models/User');
+require('./models/Student');
+require('./models/Company');
+require('./models/PlacementDrive');
+require('./models/Application');
+require('./models/HR');
+require('./models/Notification');
+require('./models/Interview');
+require('./models/Message');
+require('./models/Document');
+require('./models/Assessment');
+require('./models/AssessmentResult');
+
+// Routes
+const authRoutes = require('./routes/auth-mongodb');
+const companyRoutes = require('./routes/companies-mongodb');
+const driveRoutes = require('./routes/drives-mongodb');
+const applicationRoutes = require('./routes/applications-mongodb');
+const studentRoutes = require('./routes/students-mongodb');
+const notificationRoutes = require('./routes/notifications-simple');
+const adminRoutes = require('./routes/admin-mongodb');
+const hrRoutes = require('./routes/hr-mongodb');
+const interviewRoutes = require('./routes/interviews-mongodb');
+const messageRoutes = require('./routes/messages-mongodb');
+const documentRoutes = require('./routes/documents-mongodb');
+const offerLetterRoutes = require('./routes/offerletter-mongodb');
+const assessmentRoutes = require('./routes/assessment-mongodb');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/companies', companyRoutes);
+app.use('/api/drives', driveRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/hr', hrRoutes);
+app.use('/api/interviews', interviewRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/offer-letters', offerLetterRoutes);
+app.use('/api/assessments', assessmentRoutes);
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ success: true, message: 'Server is running with MongoDB' });
+});
+
+// Public stats endpoint (no auth required) for homepage
+app.get('/api/public/stats', async (req, res) => {
+  try {
+    const Student = require('./models/Student');
+    const Company = require('./models/Company');
+    const Application = require('./models/Application');
+    const PlacementDrive = require('./models/PlacementDrive');
+
+    const [totalStudents, totalCompanies, activeDrives] = await Promise.all([
+      Student.countDocuments(),
+      Company.countDocuments(),
+      PlacementDrive.countDocuments({ status: { $in: ['upcoming', 'ongoing'] } })
+    ]);
+
+    // Get placed students count
+    const placedStudentIds = await Application.distinct('studentId', { status: 'selected' });
+    const placedStudents = placedStudentIds.length;
+
+    // Get highest package from selected applications
+    const selectedApps = await Application.find({ status: 'selected' }).select('packageOffered');
+    const packages = selectedApps.map(a => a.packageOffered || 0).filter(p => p > 0);
+    const highestPackage = packages.length > 0 ? Math.max(...packages) : 0;
+
+    res.json({ totalStudents, totalCompanies, placedStudents, highestPackage, activeDrives });
+  } catch (error) {
+    console.error('Public stats error:', error);
+    res.json({ totalStudents: 0, totalCompanies: 0, placedStudents: 0, highestPackage: 0, activeDrives: 0 });
+  }
+});
+
+// Error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📡 API available at http://localhost:${PORT}/api`);
+  console.log(`💾 Using MongoDB database`);
+  console.log(`👤 Default admin: admin@college.edu / admin123`);
+  console.log(`\n📝 To create admin user, run: node seed-admin.js`);
+});
+
+

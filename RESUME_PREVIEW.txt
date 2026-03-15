@@ -1,0 +1,164 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║              PROFESSIONAL RESUME TEMPLATE - PREVIEW                  ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                                                                      │
+│  ╔════════════════════════════════════════════════════════════════╗ │
+│  ║                    [GRADIENT PURPLE HEADER]                    ║ │
+│  ║                                                                ║ │
+│  ║                      JOHN DOE                                  ║ │
+│  ║                   (Large, Bold, White)                         ║ │
+│  ║                                                                ║ │
+│  ║         📧 john@example.com  |  📱 +91 9876543210             ║ │
+│  ║                                                                ║ │
+│  ║              🎯 Applying to: Google                            ║ │
+│  ║                  (If company specified)                        ║ │
+│  ╚════════════════════════════════════════════════════════════════╝ │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │ PROFESSIONAL SUMMARY                                           │ │
+│  │ ══════════════════════════════════════════════════════════════ │ │
+│  │                                                                │ │
+│  │ Passionate software engineer with 2 years of experience in    │ │
+│  │ full-stack development. Skilled in React, Node.js, and cloud  │ │
+│  │ technologies. Seeking to leverage my expertise at Google...   │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │ TECHNICAL SKILLS                                               │ │
+│  │ ══════════════════════════════════════════════════════════════ │ │
+│  │                                                                │ │
+│  │  [JavaScript]  [React]  [Node.js]  [Python]  [MongoDB]        │ │
+│  │  [AWS]  [Docker]  [Git]  [TypeScript]  [REST APIs]            │ │
+│  │                                                                │ │
+│  │  (Each skill in a purple gradient badge with shadow)          │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │ PROFESSIONAL EXPERIENCE                                        │ │
+│  │ ══════════════════════════════════════════════════════════════ │ │
+│  │                                                                │ │
+│  │ ┌──────────────────────────────────────────────────────────┐  │ │
+│  │ │ Software Engineer Intern | Tech Corp | 2023-2024        │  │ │
+│  │ │                                                          │  │ │
+│  │ │ • Developed full-stack web applications using MERN      │  │ │
+│  │ │ • Improved application performance by 40%               │  │ │
+│  │ │ • Collaborated with cross-functional teams              │  │ │
+│  │ └──────────────────────────────────────────────────────────┘  │ │
+│  │                                                                │ │
+│  │ (Light gray box with purple left border)                      │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │ EDUCATION                                                      │ │
+│  │ ══════════════════════════════════════════════════════════════ │ │
+│  │                                                                │ │
+│  │ ┌──────────────────────────────────────────────────────────┐  │ │
+│  │ │ B.Tech in Computer Science Engineering                  │  │ │
+│  │ │ XYZ College of Engineering | 2020-2024                  │  │ │
+│  │ │ CGPA: 8.5/10                                            │  │ │
+│  │ └──────────────────────────────────────────────────────────┘  │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │ PROJECTS                                                       │ │
+│  │ ══════════════════════════════════════════════════════════════ │ │
+│  │                                                                │ │
+│  │ ┌──────────────────────────────────────────────────────────┐  │ │
+│  │ │ E-Commerce Platform                                      │  │ │
+│  │ │ Built a full-stack e-commerce platform with React,      │  │ │
+│  │ │ Node.js, and MongoDB. Features include user auth,       │  │ │
+│  │ │ payment integration, and real-time inventory.           │  │ │
+│  │ └──────────────────────────────────────────────────────────┘  │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │                          FOOTER                                │ │
+│  │ ────────────────────────────────────────────────────────────── │ │
+│  │         Resume generated on February 7, 2026                   │ │
+│  │   This resume was created using PlaceHub - Smart Campus        │ │
+│  │                  Placement Portal                              │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════╗
+║                        KEY FEATURES                                  ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+✨ VISUAL ELEMENTS:
+   • Gradient purple header (modern and professional)
+   • White text on colored background for contrast
+   • Skill badges with gradient and shadows
+   • Boxed content sections with left border accent
+   • Professional typography and spacing
+
+📐 LAYOUT:
+   • Max width: 850px (perfect for reading)
+   • Generous padding: 40px
+   • Section spacing: 35px
+   • Clean, organized structure
+
+🎨 COLOR SCHEME:
+   • Primary: Purple gradient (#667eea to #764ba2)
+   • Text: Dark gray (#333)
+   • Background: White with light gray accents
+   • Borders: Light gray (#e0e0e0)
+
+🖨️ PRINT-READY:
+   • Optimized for printing
+   • Colors preserved in print
+   • Proper page margins (0.5 inch)
+   • Clean, professional output
+
+📱 RESPONSIVE:
+   • Looks great on all screen sizes
+   • Mobile-friendly layout
+   • Flexible skill badges
+   • Adaptive contact info
+
+╔══════════════════════════════════════════════════════════════════════╗
+║                    HOW TO USE                                        ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+1. Login as student
+2. Go to "Explore Resources"
+3. Click "Resume Builder" tab
+4. Select category and company (optional)
+5. Choose a template
+6. Fill in your details
+7. Click "Download Resume"
+8. Open HTML file in browser
+9. Print to PDF (Ctrl+P → Save as PDF)
+10. Share with recruiters!
+
+╔══════════════════════════════════════════════════════════════════════╗
+║                    PROFESSIONAL STANDARDS                            ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+✅ Modern Design        - Gradient header, skill badges
+✅ Clean Layout         - Well-organized sections
+✅ Professional Colors  - Corporate-friendly palette
+✅ ATS-Friendly         - Text-based, proper structure
+✅ Print Quality        - Looks great on paper
+✅ Responsive           - Works on all devices
+✅ Easy to Convert      - HTML to PDF in seconds
+✅ Recruiter-Ready      - Stands out professionally
+
+╔══════════════════════════════════════════════════════════════════════╗
+║                         RESULT                                       ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Students can now create IMPRESSIVE, PROFESSIONAL resumes that:
+• Stand out visually
+• Remain corporate-appropriate
+• Pass ATS systems
+• Look great in print
+• Are easy to share
+
+Perfect for applying to top companies like Google, Microsoft, Amazon!
+
+╚══════════════════════════════════════════════════════════════════════╝

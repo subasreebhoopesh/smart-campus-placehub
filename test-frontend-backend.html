@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend-Backend Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Frontend-Backend Connection Test</h1>
+    <p>This page tests if the frontend can connect to the backend API.</p>
+    
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testLogin()">Test Admin Login</button>
+    <button onclick="testCompanies()">Test Get Companies</button>
+    <button onclick="testDrives()">Test Get Drives</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        function addResult(title, success, message, data = null) {
+            const div = document.createElement('div');
+            div.className = 'test ' + (success ? 'success' : 'error');
+            div.innerHTML = `
+                <h3>${title}</h3>
+                <p><strong>Status:</strong> ${success ? '✅ SUCCESS' : '❌ FAILED'}</p>
+                <p><strong>Message:</strong> ${message}</p>
+                ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+            `;
+            document.getElementById('results').appendChild(div);
+        }
+
+        async function testHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                addResult('Health Check', response.ok, `Server responded with status ${response.status}`, data);
+            } catch (error) {
+                addResult('Health Check', false, error.message);
+            }
+        }
+
+        async function testLogin() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'admin@college.edu', password: 'admin123' })
+                });
+                const data = await response.json();
+                
+                if (data.token) {
+                    localStorage.setItem('test_token', data.token);
+                }
+                
+                addResult('Admin Login', response.ok, `Login ${response.ok ? 'successful' : 'failed'}`, data);
+            } catch (error) {
+                addResult('Admin Login', false, error.message);
+            }
+        }
+
+        async function testCompanies() {
+            const token = localStorage.getItem('test_token');
+            if (!token) {
+                addResult('Get Companies', false, 'No token found. Please login first.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/companies`, {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                addResult('Get Companies', response.ok, `Found ${Array.isArray(data) ? data.length : 0} companies`, data);
+            } catch (error) {
+                addResult('Get Companies', false, error.message);
+            }
+        }
+
+        async function testDrives() {
+            const token = localStorage.getItem('test_token');
+            if (!token) {
+                addResult('Get Drives', false, 'No token found. Please login first.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/drives`, {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                addResult('Get Drives', response.ok, `Found ${Array.isArray(data) ? data.length : 0} drives`, data);
+            } catch (error) {
+                addResult('Get Drives', false, error.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system - Blue/Indigo theme for Placement Management System */
+
+@layer base {
+  :root {
+    /* Pastel Color Theme - Soft and Gentle */
+    --background: 210 40% 98%;
+    --foreground: 240 10% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 25%;
+
+    /* Pastel Blue Primary */
+    --primary: 210 60% 75%;
+    --primary-foreground: 240 10% 25%;
+
+    /* Pastel Pink Secondary */
+    --secondary: 340 60% 88%;
+    --secondary-foreground: 240 10% 25%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 240 5% 50%;
+
+    /* Pastel Lavender Accent */
+    --accent: 270 50% 85%;
+    --accent-foreground: 240 10% 25%;
+
+    /* Pastel Red for Destructive */
+    --destructive: 0 60% 75%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 30% 90%;
+    --input: 220 30% 90%;
+    --ring: 210 60% 75%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 25%;
+    --sidebar-primary: 210 60% 75%;
+    --sidebar-primary-foreground: 240 10% 25%;
+    --sidebar-accent: 270 50% 85%;
+    --sidebar-accent-foreground: 240 10% 25%;
+    --sidebar-border: 220 30% 90%;
+    --sidebar-ring: 210 60% 75%;
+  }
+
+  .dark {
+    /* Dark Mode Pastel - Muted and Soft */
+    --background: 240 15% 12%;
+    --foreground: 210 40% 95%;
+
+    --card: 240 15% 15%;
+    --card-foreground: 210 40% 95%;
+
+    --popover: 240 15% 15%;
+    --popover-foreground: 210 40% 95%;
+
+    /* Pastel Blue for Dark Mode */
+    --primary: 210 50% 65%;
+    --primary-foreground: 240 15% 12%;
+
+    /* Pastel Pink for Dark Mode */
+    --secondary: 340 40% 60%;
+    --secondary-foreground: 240 15% 12%;
+
+    --muted: 240 15% 20%;
+    --muted-foreground: 240 5% 70%;
+
+    /* Pastel Lavender for Dark Mode */
+    --accent: 270 40% 60%;
+    --accent-foreground: 240 15% 12%;
+
+    /* Pastel Red for Dark Mode */
+    --destructive: 0 50% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 15% 25%;
+    --input: 240 15% 25%;
+    --ring: 210 50% 65%;
+
+    --sidebar-background: 240 15% 15%;
+    --sidebar-foreground: 210 40% 95%;
+    --sidebar-primary: 210 50% 65%;
+    --sidebar-primary-foreground: 240 15% 12%;
+    --sidebar-accent: 270 40% 60%;
+    --sidebar-accent-foreground: 240 15% 12%;
+    --sidebar-border: 240 15% 25%;
+    --sidebar-ring: 210 50% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* 3D Card Effects */
+@layer utilities {
+  .rotate-y-12 {
+    transform: rotateY(12deg);
+  }
+  
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}
+
+/* Smooth animations for 3D cards */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Homepage Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.8s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.8s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.6s ease-out;
+}
+
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
+
+/* Gradient Text Animation */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
