@@ -144,6 +144,7 @@ export default function Drives() {
     eligibleBranches: [] as string[],
     description: '',
     status: 'upcoming',
+    requiredStudents: '1',
   });
 
   const resetForm = () => {
@@ -156,6 +157,7 @@ export default function Drives() {
       eligibleBranches: [],
       description: '',
       status: 'upcoming',
+      requiredStudents: '1',
     });
   };
 
@@ -172,13 +174,14 @@ export default function Drives() {
     try {
       setSubmitting(true);
       await api.drives.create({
-        companyId: formData.companyId, // Keep as string for MongoDB ObjectId
+        companyId: formData.companyId,
         jobRole: formData.jobRole,
         driveDate: formData.date,
         eligibleBranches: formData.eligibleBranches.join(','),
         minCgpa: parseFloat(formData.minCgpa) || 0,
         packageOffered: parseInt(formData.packageOffered) || 0,
         description: formData.description,
+        requiredStudents: parseInt(formData.requiredStudents) || 1,
       });
 
       toast({
@@ -206,7 +209,7 @@ export default function Drives() {
     try {
       setSubmitting(true);
       await api.drives.update(selectedDrive.id, {
-        companyId: formData.companyId, // Keep as string for MongoDB ObjectId
+        companyId: formData.companyId,
         jobRole: formData.jobRole,
         driveDate: formData.date,
         eligibleBranches: formData.eligibleBranches.join(','),
@@ -214,6 +217,7 @@ export default function Drives() {
         packageOffered: parseInt(formData.packageOffered) || 0,
         description: formData.description,
         status: formData.status,
+        requiredStudents: parseInt(formData.requiredStudents) || 1,
       });
 
       toast({
@@ -271,6 +275,7 @@ export default function Drives() {
       eligibleBranches: eligibleBranches,
       description: drive.description || '',
       status: drive.status || 'upcoming',
+      requiredStudents: (drive.required_students || 1).toString(),
     });
     setIsEditDialogOpen(true);
   };
@@ -419,8 +424,21 @@ export default function Drives() {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label>Eligible Branches</Label>
-                    <div className="border rounded-md p-2 max-h-32 overflow-y-auto">
+                    <Label htmlFor="requiredStudents">Required Students 🎯</Label>
+                    <Input
+                      id="requiredStudents"
+                      type="number"
+                      min="1"
+                      placeholder="e.g. 3"
+                      value={formData.requiredStudents}
+                      onChange={(e) => setFormData({...formData, requiredStudents: e.target.value})}
+                    />
+                    <p className="text-xs text-muted-foreground">Drive auto-completes when this many are selected</p>
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label>Eligible Branches</Label>
+                  <div className="border rounded-md p-2 max-h-32 overflow-y-auto">
                       {BRANCHES.map((branch) => (
                         <div key={branch} className="flex items-center space-x-2 py-1">
                           <input
@@ -448,7 +466,6 @@ export default function Drives() {
                         </div>
                       ))}
                     </div>
-                  </div>
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="description">Description</Label>
@@ -585,7 +602,7 @@ export default function Drives() {
                             <span>Students</span>
                           </div>
                           <p className="font-medium">
-                            {drive.selected_students || 0}/{drive.registered_students || 0}
+                            {drive.selected_students || 0}/{drive.required_students || drive.registered_students || 0}
                           </p>
                         </div>
                       </div>

@@ -20,6 +20,8 @@ import {
   MessageCircle,
   FileCheck,
   ClipboardCheck,
+  Mail,
+  Bot,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -35,7 +37,6 @@ const adminMenuItems = [
   { icon: Briefcase, label: 'Placement Drives', path: '/admin/drives' },
   { icon: ClipboardList, label: 'Applications', path: '/admin/applications' },
   { icon: FileCheck, label: 'Document Verification', path: '/admin/documents' },
-  { icon: FileText, label: 'Offer Letters', path: '/admin/offer-letters' },
   { icon: ClipboardList, label: 'Assessments', path: '/admin/assessments' },
   { icon: UserCog, label: 'HR Credentials', path: '/admin/hr-credentials' },
   { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
@@ -52,6 +53,7 @@ const studentMenuItems = [
   { icon: ClipboardCheck, label: 'My Assessments', path: '/student/assessments' },
   { icon: FileCheck, label: 'My Documents', path: '/student/documents' },
   { icon: MessageCircle, label: 'Chat with Admin', path: '/student/chat' },
+  { icon: Bot, label: 'AI Career Bot', path: '/student/ai-career-bot' },
   { icon: BookOpen, label: 'Explore Resources', path: '/student/resources' },
   { icon: Settings, label: 'Profile', path: '/student/profile' },
 ];
@@ -59,6 +61,7 @@ const studentMenuItems = [
 const hrMenuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/hr/dashboard' },
   { icon: FileText, label: 'Applications', path: '/hr/applications' },
+  { icon: Mail, label: 'Offer Letters', path: '/hr/offer-letters' },
   { icon: Target, label: 'Required Skills', path: '/hr/skills' },
   { icon: UserCircle, label: 'Profile', path: '/hr/profile' },
 ];

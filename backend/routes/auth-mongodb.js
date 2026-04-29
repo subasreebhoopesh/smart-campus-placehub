@@ -54,7 +54,7 @@ router.post('/signup', async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'your_jwt_secret',
-      { expiresIn: '7d' }
+      { expiresIn: '30d' }
     );
 
     res.json({
@@ -104,7 +104,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'your_jwt_secret',
-      { expiresIn: '7d' }
+      { expiresIn: '30d' }
     );
 
     // Get additional data based on role
@@ -112,10 +112,12 @@ router.post('/login', async (req, res) => {
 
     if (user.role === 'hr') {
       const hrRecords = await HR.find({ userId: user._id }).populate('companyId');
-      additionalData.companies = hrRecords.map(hr => ({
-        id: hr.companyId._id,
-        name: hr.companyId.name
-      }));
+      additionalData.companies = hrRecords
+        .filter(hr => hr.companyId != null)
+        .map(hr => ({
+          id: hr.companyId._id,
+          name: hr.companyId.name
+        }));
     }
 
     if (user.role === 'student') {

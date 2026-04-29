@@ -20,7 +20,7 @@ router.get('/', authMiddleware, async (req, res) => {
     // Format response to match frontend expectations
     // Filter out drives with deleted companies and format the rest
     const formattedDrives = drives
-      .filter(drive => drive.companyId) // Skip drives with null company
+      .filter(drive => drive.companyId)
       .map(drive => ({
         id: drive._id,
         company_id: drive.companyId._id,
@@ -35,6 +35,7 @@ router.get('/', authMiddleware, async (req, res) => {
         status: drive.status,
         registered_students: drive.registeredStudents,
         selected_students: drive.selectedStudents,
+        required_students: drive.requiredStudents || 1,
         created_at: drive.createdAt
       }));
 
@@ -62,9 +63,8 @@ router.get('/:id', authMiddleware, async (req, res) => {
 // Create drive (Admin only)
 router.post('/', authMiddleware, requireRole('admin'), async (req, res) => {
   try {
-    const { companyId, jobRole, driveDate, eligibleBranches, minCgpa, packageOffered, description } = req.body;
+    const { companyId, jobRole, driveDate, eligibleBranches, minCgpa, packageOffered, description, requiredStudents } = req.body;
 
-    // Convert comma-separated string to array if needed
     const branchesArray = typeof eligibleBranches === 'string' 
       ? eligibleBranches.split(',').map(b => b.trim())
       : eligibleBranches;
@@ -76,14 +76,12 @@ router.post('/', authMiddleware, requireRole('admin'), async (req, res) => {
       eligibleBranches: branchesArray,
       minCgpa,
       packageOffered,
-      description
+      description,
+      requiredStudents: parseInt(requiredStudents) || 1
     });
 
     await drive.save();
-    
-    // Populate company name
     await drive.populate('companyId', 'name');
-
     res.json(drive);
   } catch (error) {
     console.error('Create drive error:', error);
@@ -94,32 +92,21 @@ router.post('/', authMiddleware, requireRole('admin'), async (req, res) => {
 // Update drive
 router.put('/:id', authMiddleware, requireRole('admin'), async (req, res) => {
   try {
-    const { companyId, jobRole, driveDate, eligibleBranches, minCgpa, packageOffered, description, status } = req.body;
+    const { companyId, jobRole, driveDate, eligibleBranches, minCgpa, packageOffered, description, status, requiredStudents } = req.body;
 
-    // Convert comma-separated string to array if needed
     const branchesArray = typeof eligibleBranches === 'string' 
       ? eligibleBranches.split(',').map(b => b.trim())
       : eligibleBranches;
 
     const drive = await PlacementDrive.findByIdAndUpdate(
       req.params.id,
-      {
-        companyId,
-        jobRole,
-        driveDate,
-        eligibleBranches: branchesArray,
-        minCgpa,
-        packageOffered,
-        description,
-        status
+      { companyId, jobRole, driveDate, eligibleBranches: branchesArray, minCgpa, packageOffered, description, status,
+        ...(requiredStudents !== undefined && { requiredStudents: parseInt(requiredStudents) || 1 })
       },
       { new: true }
     ).populate('companyId');
 
-    if (!drive) {
-      return res.status(404).json({ message: 'Drive not found' });
-    }
-
+    if (!drive) return res.status(404).json({ message: 'Drive not found' });
     res.json(drive);
   } catch (error) {
     console.error('Update drive error:', error);

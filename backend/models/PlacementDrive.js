@@ -40,6 +40,10 @@ const placementDriveSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  requiredStudents: {
+    type: Number,
+    default: 1
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -413,6 +413,22 @@ router.put('/:id/status', authMiddleware, requireRole('hr'), async (req, res) =>
     application.hrRemarks = remarks; // Explicit HR remarks
     await application.save();
 
+    // Update PlacementDrive counts when status changes
+    const drive = await PlacementDrive.findById(application.driveId);
+    if (drive) {
+      // Recalculate selected count from DB
+      const selectedCount = await Application.countDocuments({ driveId: drive._id, status: 'selected' });
+      const shortlistedCount = await Application.countDocuments({ driveId: drive._id, status: 'shortlisted' });
+      drive.selectedStudents = selectedCount;
+      // Auto-complete: if selected count reaches required students, mark as completed
+      const required = drive.requiredStudents || 1;
+      if (selectedCount >= required && drive.status !== 'completed') {
+        drive.status = 'completed';
+        console.log(`Drive ${drive._id} auto-completed: ${selectedCount}/${required} students selected`);
+      }
+      await drive.save();
+    }
+
     // If status changed to "selected", send placement notification
     if (status === 'selected' && previousStatus !== 'selected') {
       const student = application.studentId;
@@ -547,6 +563,19 @@ router.put('/admin/:id/respond', authMiddleware, requireRole('admin'), async (re
     application.adminRemarks = adminRemarks;
     application.remarks = adminRemarks; // Backward compatibility
     await application.save();
+
+    // Update PlacementDrive selected count
+    const driveDoc = await PlacementDrive.findById(application.driveId);
+    if (driveDoc) {
+      const selectedCount = await Application.countDocuments({ driveId: driveDoc._id, status: 'selected' });
+      driveDoc.selectedStudents = selectedCount;
+      const required = driveDoc.requiredStudents || 1;
+      if (selectedCount >= required && driveDoc.status !== 'completed') {
+        driveDoc.status = 'completed';
+        console.log(`Drive ${driveDoc._id} auto-completed by admin: ${selectedCount}/${required}`);
+      }
+      await driveDoc.save();
+    }
 
     // If status changed to "selected", send placement notification to admin
     if (status === 'selected' && previousStatus !== 'selected') {

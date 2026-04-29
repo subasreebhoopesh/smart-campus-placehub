@@ -43,12 +43,14 @@ import ResumeBuilder from "./pages/student/ResumeBuilder";
 import StudentDocuments from "./pages/student/Documents";
 import StudentAssessment from "./pages/student/Assessment";
 import MyAssessments from "./pages/student/MyAssessments";
+import AICareerBot from "./pages/student/AICareerBot";
 
 // HR Pages
 import HRDashboard from "./pages/hr/Dashboard";
 import HRApplications from "./pages/hr/Applications";
 import HRSkills from "./pages/hr/Skills";
 import HRProfile from "./pages/hr/Profile";
+import HROfferLetters from "./pages/hr/OfferLetters";
 
 const queryClient = new QueryClient();
 
@@ -101,12 +103,14 @@ const App = () => (
           <Route path="/student/documents" element={<StudentDocuments />} />
           <Route path="/student/assessment/:driveId" element={<StudentAssessment />} />
           <Route path="/student/assessments" element={<MyAssessments />} />
+          <Route path="/student/ai-career-bot" element={<AICareerBot />} />
 
           {/* HR Routes */}
           <Route path="/hr/dashboard" element={<HRDashboard />} />
           <Route path="/hr/applications" element={<HRApplications />} />
           <Route path="/hr/skills" element={<HRSkills />} />
           <Route path="/hr/profile" element={<HRProfile />} />
+          <Route path="/hr/offer-letters" element={<HROfferLetters />} />
 
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />

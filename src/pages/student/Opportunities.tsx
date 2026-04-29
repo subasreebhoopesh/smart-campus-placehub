@@ -84,7 +84,9 @@ export default function Opportunities() {
           try {
             const a = await assessmentAPI.getForDrive(d.id);
             if (a) statusMap[d.id] = { exists: true, attempted: a.alreadyAttempted, result: a.result };
-          } catch {}
+          } catch (_e) {
+            // ignore assessment fetch errors
+          }
         }));
         setAssessmentStatus(statusMap);
       } else if (drivesData && Array.isArray(drivesData.drives)) {
