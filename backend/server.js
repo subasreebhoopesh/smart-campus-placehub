@@ -100,13 +100,63 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
+// Auto-sync local passwords on startup (needed when switching from Atlas to local MongoDB)
+const syncLocalPasswords = async () => {
+  try {
+    const mongoose = require('mongoose');
+    // Wait until MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+    const bcrypt = require('bcrypt');
+    const User = require('./models/User');
+
+    // Known password map - email => password
+    const passwordMap = {
+      'admin@college.edu':             'admin123',
+      'subasree@gmail.com':            'suba123',
+      'sreesuba219.2005@gmail.com':    'suba123',
+      'maithra@gmail.com':             'maithra123',
+      'sneha@gmail.com':               'sneha123',
+      'rajee@gmail.com':               'rajee123',
+      'slonesathis@gmail.com':         'sathish123',
+      'priy@gmail.com':                'priya123',
+      'preethi@gmail.com':             'preethi123',
+      'sreeja@gmail.com':              'sreeja@2005',
+      'hr@google.com':                 'google123',
+      'hr@wipro.com':                  'wipro123',
+      'hr@google1.com':                'google123',
+      'hr@ibm.com':                    'ibm123',
+      'hr@abc.com':                    'abc123',
+    };
+
+    // Check if a test login works; if not, re-sync all passwords
+    const adminUser = await User.findOne({ email: 'admin@college.edu' });
+    if (adminUser) {
+      const valid = await bcrypt.compare('admin123', adminUser.password);
+      if (!valid) {
+        console.log('🔄 Re-syncing passwords for local MongoDB...');
+        for (const [email, password] of Object.entries(passwordMap)) {
+          const hash = await bcrypt.hash(password, 10);
+          await User.updateOne({ email }, { password: hash });
+        }
+        console.log('✅ Passwords synced successfully');
+      }
+    }
+  } catch (e) {
+    // Non-fatal — don't crash server
+  }
+};
+
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
   console.log(`💾 Using MongoDB database`);
   console.log(`👤 Default admin: admin@college.edu / admin123`);
   console.log(`\n📝 To create admin user, run: node seed-admin.js`);
+  // Auto-sync passwords
+  await syncLocalPasswords();
 });
 
 

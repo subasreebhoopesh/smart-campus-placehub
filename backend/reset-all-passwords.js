@@ -1,28 +1,30 @@
-// Reset all user passwords for local development
+// Reset all user passwords to their ORIGINAL passwords
+// Run this once after switching from Atlas to local MongoDB: node reset-all-passwords.js
 require('./config/database-mongodb');
 const User = require('./models/User');
 const bcrypt = require('bcrypt');
 
+// Map email -> original password that each user registered with
 const passwordMap = {
-  // Students - password = first part of email + "123"
-  'subasree@gmail.com':        'suba123',
-  'sreesuba219.2005@gmail.com':'suba123',
-  'maithra@gmail.com':         'maithra123',
-  'sneha@gmail.com':           'sneha123',
-  'rajee@gmail.com':           'rajee123',
-  'slonesathis@gmail.com':     'sathish123',
-  'priy@gmail.com':            'priya123',
-  'preethi@gmail.com':         'preethi123',
-  'sreeja@gmail.com':          'sreeja123',
+  // Admin
+  'admin@college.edu':             'admin123',
+
+  // Students - original passwords from registration
+  'subasree@gmail.com':            'suba123',
+  'sreesuba219.2005@gmail.com':    'suba123',
+  'maithra@gmail.com':             'maithra123',
+  'sneha@gmail.com':               'sneha123',
+  'rajee@gmail.com':               'rajee123',
+  'slonesathis@gmail.com':         'sathish123',
+  'priy@gmail.com':                'priya123',
+  'preethi@gmail.com':             'preethi123',
+  'sreeja@gmail.com':              'sreeja@2005',
 
   // HR accounts
-  'hr@google.com':             'google123',
-  'hr@wipro.com':              'wipro123',
-  'hr@google1.com':            'google123',
-  'hr@ibm.com':                'ibm123',
-
-  // Admin
-  'admin@college.edu':         'admin123',
+  'hr@google.com':                 'google123',
+  'hr@wipro.com':                  'wipro123',
+  'hr@google1.com':                'google123',
+  'hr@ibm.com':                    'ibm123',
 };
 
 setTimeout(async () => {
@@ -40,9 +42,10 @@ setTimeout(async () => {
     }
     console.log(`\n✅ Done! Reset ${count} passwords.`);
     console.log('\n📋 LOGIN CREDENTIALS:');
-    console.log('─────────────────────────────────────');
-    console.log('ADMIN:   admin@college.edu       / admin123');
-    console.log('─────────────────────────────────────');
+    console.log('─────────────────────────────────────────────');
+    console.log('ADMIN:');
+    console.log('  admin@college.edu              / admin123');
+    console.log('─────────────────────────────────────────────');
     console.log('STUDENTS:');
     console.log('  subasree@gmail.com             / suba123');
     console.log('  sreesuba219.2005@gmail.com     / suba123');
@@ -52,8 +55,8 @@ setTimeout(async () => {
     console.log('  slonesathis@gmail.com          / sathish123');
     console.log('  priy@gmail.com                 / priya123');
     console.log('  preethi@gmail.com              / preethi123');
-    console.log('  sreeja@gmail.com               / sreeja123');
-    console.log('─────────────────────────────────────');
+    console.log('  sreeja@gmail.com               / sreeja@2005');
+    console.log('─────────────────────────────────────────────');
     console.log('HR:');
     console.log('  hr@google.com                  / google123');
     console.log('  hr@wipro.com                   / wipro123');
