@@ -956,3 +956,4 @@ router.get('/recent-activities', authMiddleware, requireRole('admin'), async (re
     res.status(500).json({ message: 'Failed to fetch recent activities' });
   }
 });
+
