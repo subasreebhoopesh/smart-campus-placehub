@@ -289,7 +289,7 @@ export default function HRCredentials() {
                     </SelectTrigger>
                     <SelectContent>
                       {companies.map((company) => (
-                        <SelectItem key={company.id} value={company.id}>
+                        <SelectItem key={company.id} value={company.name}>
                           {company.name}
                         </SelectItem>
                       ))}
@@ -453,7 +453,7 @@ export default function HRCredentials() {
                 </SelectTrigger>
                 <SelectContent>
                   {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.id}>
+                    <SelectItem key={company.id} value={company.name}>
                       {company.name}
                     </SelectItem>
                   ))}
