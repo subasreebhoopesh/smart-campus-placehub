@@ -6,8 +6,23 @@ const { authMiddleware, requireRole } = require('../middleware/auth');
 // Get all companies
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    const companies = await Company.find().sort({ createdAt: -1 });
-    res.json(companies);
+    const companiesRaw = await Company.find().sort({ createdAt: -1 });
+    // Format companies so frontend CompaniesContext receives { success, companies }
+    const companies = companiesRaw.map(c => ({
+      id: c._id.toString(),
+      name: c.name,
+      industry: c.industry || '',
+      website: c.website || '',
+      contactPerson: c.contactPerson || '',
+      contactEmail: c.contactEmail || '',
+      contactPhone: c.contactPhone || '',
+      jobRoles: c.jobRoles || [],
+      packageOffered: c.packageOffered || { min: 0, max: 0 },
+      visitHistory: c.visitHistory || [],
+      requiredSkills: c.requiredSkills || [],
+      createdAt: c.createdAt
+    }));
+    res.json({ success: true, companies });
   } catch (error) {
     console.error('Get companies error:', error);
     res.status(500).json({ message: 'Failed to fetch companies' });

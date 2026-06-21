@@ -149,11 +149,14 @@ export default function HRCredentials() {
         loadHRCredentials();
       }
     } catch (error: any) {
+      // Show specific error message from backend
+      const errorMsg = error.response?.data?.message || error.message || "Failed to create HR user";
       toast({
         title: "Error",
-        description: error.message || "Failed to create HR credential",
+        description: errorMsg,
         variant: "destructive",
       });
+      console.error('Create HR error details:', error.response?.data || error);
     } finally {
       setSubmitting(false);
     }

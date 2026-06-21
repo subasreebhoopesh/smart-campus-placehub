@@ -154,7 +154,58 @@ const syncLocalPasswords = async () => {
   }
 };
 
-const PORT = process.env.PORT || 3001;
+// Auto-seed companies on startup if collection is empty
+const autoSeedCompanies = async () => {
+  try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+    const Company = require('./models/Company');
+    const count = await Company.countDocuments();
+    if (count > 0) return; // Already has companies
+
+    console.log('🌱 Auto-seeding companies...');
+    const companiesData = [
+      { name: 'Google', industry: 'Technology & Cloud', website: 'https://careers.google.com', contactPerson: 'HR Manager', contactEmail: 'hr@google.com', contactPhone: '9000000001', jobRoles: ['Software Engineer', 'Cloud Architect'], packageOffered: { min: 20, max: 45 }, requiredSkills: ['JavaScript', 'Python', 'Cloud', 'DSA'], visitHistory: [] },
+      { name: 'Microsoft', industry: 'Software & Cloud', website: 'https://careers.microsoft.com', contactPerson: 'HR Manager', contactEmail: 'hr@microsoft.com', contactPhone: '9000000002', jobRoles: ['Software Developer', 'Azure Engineer'], packageOffered: { min: 18, max: 40 }, requiredSkills: ['C#', '.NET', 'Azure', 'JavaScript'], visitHistory: [] },
+      { name: 'Amazon', industry: 'E-commerce & AWS', website: 'https://www.amazon.jobs', contactPerson: 'HR Manager', contactEmail: 'hr@amazon.com', contactPhone: '9000000003', jobRoles: ['SDE', 'AWS Engineer'], packageOffered: { min: 22, max: 50 }, requiredSkills: ['Java', 'AWS', 'DSA'], visitHistory: [] },
+      { name: 'TCS', industry: 'IT Services', website: 'https://www.tcs.com/careers', contactPerson: 'HR Manager', contactEmail: 'hr@tcs.com', contactPhone: '9000000004', jobRoles: ['Software Engineer', 'Business Analyst'], packageOffered: { min: 3.5, max: 7 }, requiredSkills: ['Java', 'SQL', 'Communication'], visitHistory: [] },
+      { name: 'Infosys', industry: 'IT Consulting', website: 'https://www.infosys.com/careers', contactPerson: 'HR Manager', contactEmail: 'hr@infosys.com', contactPhone: '9000000005', jobRoles: ['Systems Engineer'], packageOffered: { min: 4, max: 9 }, requiredSkills: ['Python', 'Java', 'SQL'], visitHistory: [] },
+      { name: 'Wipro', industry: 'IT Services', website: 'https://careers.wipro.com', contactPerson: 'HR Manager', contactEmail: 'hr@wipro.com', contactPhone: '9000000006', jobRoles: ['Project Engineer'], packageOffered: { min: 3.5, max: 8 }, requiredSkills: ['Java', 'C++', 'SQL'], visitHistory: [] },
+      { name: 'IBM', industry: 'Technology', website: 'https://www.ibm.com/careers', contactPerson: 'HR Manager', contactEmail: 'hr@ibm.com', contactPhone: '9000000007', jobRoles: ['Software Developer', 'AI Engineer'], packageOffered: { min: 5, max: 12 }, requiredSkills: ['Python', 'AI/ML', 'Cloud'], visitHistory: [] },
+      { name: 'Cognizant', industry: 'IT Services', website: 'https://careers.cognizant.com', contactPerson: 'HR Manager', contactEmail: 'hr@cognizant.com', contactPhone: '9000000008', jobRoles: ['Programmer Analyst'], packageOffered: { min: 4, max: 8 }, requiredSkills: ['Java', 'SQL', 'JavaScript'], visitHistory: [] },
+      { name: 'Accenture', industry: 'Consulting', website: 'https://www.accenture.com/careers', contactPerson: 'HR Manager', contactEmail: 'hr@accenture.com', contactPhone: '9000000009', jobRoles: ['Associate Software Engineer'], packageOffered: { min: 4.5, max: 9 }, requiredSkills: ['Java', 'Python', 'SQL'], visitHistory: [] },
+      { name: 'HCL Tech', industry: 'IT Services', website: 'https://www.hcltech.com/careers', contactPerson: 'HR Manager', contactEmail: 'hr@hcltech.com', contactPhone: '9000000010', jobRoles: ['Software Engineer'], packageOffered: { min: 3.5, max: 7 }, requiredSkills: ['Java', 'C++', 'SQL'], visitHistory: [] },
+    ];
+    await Company.insertMany(companiesData);
+    console.log(`✅ Auto-seeded ${companiesData.length} companies`);
+  } catch (e) {
+    console.error('Auto-seed companies error:', e.message);
+  }
+};
+
+// Auto-seed admin user on startup if not exists
+const autoSeedAdmin = async () => {
+  try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+    const bcrypt = require('bcrypt');
+    const User = require('./models/User');
+    const existing = await User.findOne({ email: 'admin@college.edu' });
+    if (!existing) {
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      await User.create({ email: 'admin@college.edu', password: hashedPassword, name: 'Admin User', role: 'admin' });
+      console.log('✅ Auto-created admin user: admin@college.edu / admin123');
+    }
+  } catch (e) {
+    // Non-fatal
+  }
+};
+
+
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
@@ -163,6 +214,10 @@ app.listen(PORT, async () => {
   console.log(`\n📝 To create admin user, run: node seed-admin.js`);
   // Auto-sync passwords
   await syncLocalPasswords();
+  // Auto-seed companies if empty
+  await autoSeedCompanies();
+  // Auto-seed admin if not exists
+  await autoSeedAdmin();
 });
 
 

@@ -535,6 +535,7 @@ router.post('/hr-users', authMiddleware, requireRole('admin'), async (req, res) 
     const HR = require('../models/HR');
     const Company = require('../models/Company');
     const bcrypt = require('bcryptjs');
+    const mongoose = require('mongoose');
 
     // Check if email already exists
     const existingUser = await User.findOne({ email });
@@ -542,10 +543,37 @@ router.post('/hr-users', authMiddleware, requireRole('admin'), async (req, res) 
       return res.status(400).json({ message: 'Email already exists' });
     }
 
-    // Check if company exists
-    const company = await Company.findById(companyId);
+    // Find company - handle both MongoDB ObjectId and name-based lookup
+    let company = null;
+    
+    // Try by ObjectId first
+    if (mongoose.Types.ObjectId.isValid(companyId)) {
+      company = await Company.findById(companyId);
+    }
+    
+    // If not found by ID, try by name (for hardcoded frontend data)
     if (!company) {
-      return res.status(404).json({ message: 'Company not found' });
+      // Frontend may send company name as the id from hardcoded data
+      company = await Company.findOne({ name: { $regex: new RegExp('^' + companyId + '$', 'i') } });
+    }
+
+    // If still not found, create the company on the fly
+    if (!company) {
+      console.log(`Company not found for id "${companyId}", creating new company...`);
+      company = new Company({
+        name: companyId, // Use the companyId value as name if it's a string
+        industry: 'Technology',
+        website: '',
+        contactPerson: name,
+        contactEmail: email,
+        contactPhone: '',
+        jobRoles: [],
+        packageOffered: { min: 0, max: 0 },
+        requiredSkills: [],
+        visitHistory: []
+      });
+      await company.save();
+      console.log(`✅ Auto-created company: ${company.name}`);
     }
 
     // Hash password
@@ -563,7 +591,7 @@ router.post('/hr-users', authMiddleware, requireRole('admin'), async (req, res) 
     // Create HR record
     const hr = new HR({
       userId: user._id,
-      companyId
+      companyId: company._id
     });
     await hr.save();
 
@@ -582,7 +610,7 @@ router.post('/hr-users', authMiddleware, requireRole('admin'), async (req, res) 
     });
   } catch (error) {
     console.error('Create HR user error:', error);
-    res.status(500).json({ message: 'Failed to create HR user' });
+    res.status(500).json({ message: 'Failed to create HR user: ' + error.message });
   }
 });
 
