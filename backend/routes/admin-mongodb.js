@@ -507,7 +507,7 @@ router.get('/hr-users', authMiddleware, requireRole('admin'), async (req, res) =
     // Get all HR records
     const hrRecords = await HR.find({}).populate('userId').populate('companyId');
     
-    const hrUsers = hrRecords.map(hr => ({
+    const hrUsers = hrRecords.filter(hr => hr.userId && hr.companyId).map(hr => ({
       id: hr._id.toString(),
       userId: hr.userId._id.toString(),
       name: hr.userId.name,
