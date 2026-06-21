@@ -9,3 +9,7 @@ services:
         value: production
       - key: PORT
         value: 3001
+      - key: JWT_SECRET
+        value: placehub_jwt_secret_2024_stable
+      - key: FRONTEND_URL
+        value: https://smart-campus-placehub.vercel.app
