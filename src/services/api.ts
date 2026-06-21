@@ -31,19 +31,19 @@ const getHeaders = (includeAuth = true): HeadersInit => {
 // Helper for handling responses
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
-    // Auto-clear token and redirect on 401 only when:
-    // 1. We have a token (it's expired/invalid, not just unauthenticated)
-    // 2. It's not an auth endpoint (login/signup return 401 for wrong credentials)
+    // Auto-clear token and redirect on 401
     if (response.status === 401) {
       const token = localStorage.getItem('token');
       const isAuthEndpoint = response.url.includes('/api/auth/login') || 
                              response.url.includes('/api/auth/signup');
       if (token && !isAuthEndpoint) {
+        // Token is invalid/expired - force re-login
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         if (!window.location.pathname.includes('/login') && 
             !window.location.pathname.includes('/register') &&
             window.location.pathname !== '/') {
+          console.warn('Token expired or invalid - redirecting to login');
           window.location.href = '/login';
         }
       }

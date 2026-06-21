@@ -1,16 +1,39 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+// Use a consistent JWT secret - must match what was used to sign tokens
+const JWT_SECRET = process.env.JWT_SECRET || 'placehub_jwt_secret_2024_stable';
 
 const authMiddleware = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
     
     if (!token) {
       return res.status(401).json({ success: false, message: 'No token provided' });
     }
     
-    const decoded = jwt.verify(token, JWT_SECRET);
+    // Try primary secret first, then fallback secrets for backward compatibility
+    const secrets = [
+      JWT_SECRET,
+      'placehub_jwt_secret_2024_stable',
+      'your_jwt_secret',
+      'your_jwt_secret_key_change_this_in_production',
+    ];
+
+    let decoded = null;
+    for (const secret of secrets) {
+      try {
+        decoded = jwt.verify(token, secret);
+        break;
+      } catch (e) {
+        continue;
+      }
+    }
+
+    if (!decoded) {
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+
     req.user = decoded;
     next();
   } catch (error) {

@@ -53,7 +53,7 @@ router.post('/signup', async (req, res) => {
     // Generate token
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
-      process.env.JWT_SECRET || 'your_jwt_secret',
+      process.env.JWT_SECRET || 'placehub_jwt_secret_2024_stable',
       { expiresIn: '30d' }
     );
 
@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
     // Generate token
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
-      process.env.JWT_SECRET || 'your_jwt_secret',
+      process.env.JWT_SECRET || 'placehub_jwt_secret_2024_stable',
       { expiresIn: '30d' }
     );
 
