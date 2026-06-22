@@ -206,7 +206,8 @@ const autoSeedAdmin = async () => {
 };
 
 
-app.listen(PORT, async () => {
+app.listen(process.env.PORT || 3001, async () => {
+  const PORT = process.env.PORT || 3001;
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
   console.log(`💾 Using MongoDB database`);
