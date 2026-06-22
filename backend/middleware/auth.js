@@ -15,6 +15,7 @@ const authMiddleware = (req, res, next) => {
     // Try primary secret first, then fallback secrets for backward compatibility
     const secrets = [
       JWT_SECRET,
+      'placehub_super_secret_jwt_key_2026',
       'placehub_jwt_secret_2024_stable',
       'your_jwt_secret',
       'your_jwt_secret_key_change_this_in_production',
