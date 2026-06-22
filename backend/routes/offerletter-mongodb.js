@@ -39,8 +39,10 @@ router.get('/hr/list', authMiddleware, requireRole('hr'), async (req, res) => {
     if (!hrRecord) return res.status(403).json({ message: 'HR record not found' });
 
     const applications = await Application.find({
-      companyId: hrRecord.companyId,
-      status: 'selected'
+      $or: [
+        { companyId: hrRecord.companyId, status: 'selected' },
+        { _id: { $in: await Application.find({ status: 'selected' }).distinct('_id') }, companyId: null, status: 'selected' }
+      ]
     })
       .populate({ path: 'studentId', populate: { path: 'userId', select: 'name email' } })
       .populate('driveId', 'jobRole driveDate packageOffered')
