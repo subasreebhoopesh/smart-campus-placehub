@@ -9,7 +9,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import jsPDF from 'jspdf';
 
-const API_BASE = 'http://localhost:3001/api';
 
 interface SelectedStudent {
   id: string;
@@ -202,9 +201,16 @@ export default function HROfferLetters() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE}/offer-letters/hr/list`, {
+      const apiBase = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api');
+      const res = await fetch(`${apiBase}/offer-letters/hr/list`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error('HR list error:', err);
+        setStudents([]);
+        return;
+      }
       const data = await res.json();
       setStudents(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -222,7 +228,8 @@ export default function HROfferLetters() {
     // 2. Save to DB so student can see and download
     try {
       const token = localStorage.getItem('token');
-      await fetch(`${API_BASE}/offer-letters/hr/send/${student.id}`, {
+      const apiBase = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api');
+      await fetch(`${apiBase}/offer-letters/hr/send/${student.id}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });

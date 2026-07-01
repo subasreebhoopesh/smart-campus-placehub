@@ -35,19 +35,24 @@ const upload = multer({
 router.get('/hr/list', authMiddleware, requireRole('hr'), async (req, res) => {
   try {
     const HR = require('../models/HR');
-    const hrRecord = await HR.findOne({ userId: req.user.id });
+    const hrRecord = await HR.findOne({ userId: req.user.id }).populate('companyId');
     if (!hrRecord) return res.status(403).json({ message: 'HR record not found' });
 
+    // Fetch selected applications for this HR's company OR applications with null companyId
     const applications = await Application.find({
+      status: 'selected',
       $or: [
-        { companyId: hrRecord.companyId, status: 'selected' },
-        { _id: { $in: await Application.find({ status: 'selected' }).distinct('_id') }, companyId: null, status: 'selected' }
+        { companyId: hrRecord.companyId?._id },
+        { companyId: null },
+        { companyId: { $exists: false } }
       ]
     })
       .populate({ path: 'studentId', populate: { path: 'userId', select: 'name email' } })
       .populate('driveId', 'jobRole driveDate packageOffered')
       .populate('companyId', 'name')
-      .sort({ appliedDate: -1 });
+      .sort({ updatedAt: -1 });
+
+    const hrCompanyName = hrRecord.companyId?.name || '';
 
     const result = applications.map(app => ({
       id: app._id,
@@ -55,11 +60,12 @@ router.get('/hr/list', authMiddleware, requireRole('hr'), async (req, res) => {
       studentEmail: app.studentId?.userId?.email || '',
       rollNumber: app.studentId?.rollNumber || '',
       branch: app.studentId?.branch || '',
-      companyName: app.companyId?.name || '',
-      jobRole: app.driveId?.jobRole || '',
+      // Use HR company name for null-companyId apps so offer letter has correct branding
+      companyName: app.companyId?.name || hrCompanyName,
+      jobRole: app.driveId?.jobRole || 'Software Engineer',
       packageOffered: app.driveId?.packageOffered || 0,
-      hasOfferLetter: !!app.offerLetterSentAt,
-      offerLetterUploadedAt: app.offerLetterSentAt
+      hasOfferLetter: !!app.offerLetterUploadedAt,
+      offerLetterUploadedAt: app.offerLetterUploadedAt || null
     }));
 
     res.json(result);
@@ -73,13 +79,17 @@ router.get('/hr/list', authMiddleware, requireRole('hr'), async (req, res) => {
 router.post('/hr/send/:applicationId', authMiddleware, requireRole('hr'), async (req, res) => {
   try {
     const HR = require('../models/HR');
-    const hrRecord = await HR.findOne({ userId: req.user.id });
+    const hrRecord = await HR.findOne({ userId: req.user.id }).populate('companyId');
     if (!hrRecord) return res.status(403).json({ message: 'HR record not found' });
 
     const application = await Application.findOne({
       _id: req.params.applicationId,
-      companyId: hrRecord.companyId,
-      status: 'selected'
+      status: 'selected',
+      $or: [
+        { companyId: hrRecord.companyId },
+        { companyId: null },
+        { companyId: { $exists: false } }
+      ]
     })
       .populate({ path: 'studentId', populate: { path: 'userId', select: 'name email' } })
       .populate('driveId', 'jobRole packageOffered driveDate')
@@ -98,7 +108,7 @@ router.post('/hr/send/:applicationId', authMiddleware, requireRole('hr'), async 
       studentEmail: application.studentId?.userId?.email || '',
       rollNumber: application.studentId?.rollNumber || '',
       branch: application.studentId?.branch || '',
-      companyName: application.companyId?.name || '',
+      companyName: application.companyId?.name || hrRecord.companyId?.name || '',
       jobRole: application.driveId?.jobRole || '',
       packageOffered: application.driveId?.packageOffered || 0,
       sentAt: new Date().toISOString()
