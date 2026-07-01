@@ -88,6 +88,9 @@ export default function Drives() {
       if (Array.isArray(data)) {
         setCompanies(data);
         console.log(`Admin: Loaded ${data.length} companies`);
+      } else if (data && Array.isArray(data.companies)) {
+        setCompanies(data.companies);
+        console.log(`Admin: Loaded ${data.companies.length} companies`);
       } else {
         console.error('Admin: Unexpected companies format:', data);
         setCompanies([]);
