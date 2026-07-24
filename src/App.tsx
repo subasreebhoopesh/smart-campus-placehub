@@ -51,6 +51,8 @@ import HRApplications from "./pages/hr/Applications";
 import HRSkills from "./pages/hr/Skills";
 import HRProfile from "./pages/hr/Profile";
 import HROfferLetters from "./pages/hr/OfferLetters";
+import CompanyRegister from "./pages/CompanyRegister";
+import CompanyRequests from "./pages/admin/CompanyRequests";
 
 const queryClient = new QueryClient();
 
@@ -76,6 +78,8 @@ const App = () => (
           <Route path="/hr/login" element={<HRLogin />} />
           <Route path="/hr-login" element={<HRLogin />} />
 
+          <Route path="/company/register" element={<CompanyRegister />} />
+
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/students" element={<Students />} />
@@ -91,6 +95,7 @@ const App = () => (
           <Route path="/admin/documents" element={<DocumentVerification />} />
           <Route path="/admin/offer-letters" element={<OfferLetters />} />
           <Route path="/admin/assessments" element={<Assessments />} />
+          <Route path="/admin/company-requests" element={<CompanyRequests />} />
 
           {/* Student Routes */}
           <Route path="/student/dashboard" element={<StudentDashboard />} />

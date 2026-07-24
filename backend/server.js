@@ -35,6 +35,7 @@ require('./models/Message');
 require('./models/Document');
 require('./models/Assessment');
 require('./models/AssessmentResult');
+require('./models/CompanyRequest');
 
 // Routes
 const authRoutes = require('./routes/auth-mongodb');
@@ -50,6 +51,7 @@ const messageRoutes = require('./routes/messages-mongodb');
 const documentRoutes = require('./routes/documents-mongodb');
 const offerLetterRoutes = require('./routes/offerletter-mongodb');
 const assessmentRoutes = require('./routes/assessment-mongodb');
+const companyRequestRoutes = require('./routes/company-requests');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/companies', companyRoutes);
@@ -64,6 +66,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/offer-letters', offerLetterRoutes);
 app.use('/api/assessments', assessmentRoutes);
+app.use('/api/company-requests', companyRequestRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
