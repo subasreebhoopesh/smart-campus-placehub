@@ -51,6 +51,7 @@ import HRApplications from "./pages/hr/Applications";
 import HRSkills from "./pages/hr/Skills";
 import HRProfile from "./pages/hr/Profile";
 import HROfferLetters from "./pages/hr/OfferLetters";
+import HRDrives from "./pages/hr/Drives";
 import CompanyRegister from "./pages/CompanyRegister";
 import CompanyRequests from "./pages/admin/CompanyRequests";
 
@@ -116,6 +117,7 @@ const App = () => (
           <Route path="/hr/skills" element={<HRSkills />} />
           <Route path="/hr/profile" element={<HRProfile />} />
           <Route path="/hr/offer-letters" element={<HROfferLetters />} />
+          <Route path="/hr/drives" element={<HRDrives />} />
 
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />

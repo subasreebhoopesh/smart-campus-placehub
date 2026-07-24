@@ -62,6 +62,7 @@ const studentMenuItems = [
 
 const hrMenuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/hr/dashboard' },
+  { icon: Briefcase, label: 'My Drives', path: '/hr/drives' },
   { icon: FileText, label: 'Applications', path: '/hr/applications' },
   { icon: Mail, label: 'Offer Letters', path: '/hr/offer-letters' },
   { icon: Target, label: 'Required Skills', path: '/hr/skills' },

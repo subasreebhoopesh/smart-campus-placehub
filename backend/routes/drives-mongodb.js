@@ -60,6 +60,84 @@ router.get('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// HR: Create drive for their own company
+router.post('/hr', authMiddleware, requireRole('hr'), async (req, res) => {
+  try {
+    const HR = require('../models/HR');
+    const hrRecord = await HR.findOne({ userId: req.user.id }).populate('companyId');
+    if (!hrRecord || !hrRecord.companyId) {
+      return res.status(403).json({ message: 'HR record or company not found' });
+    }
+
+    const { jobRole, driveDate, eligibleBranches, minCgpa, packageOffered, description, requiredStudents } = req.body;
+
+    if (!jobRole || !driveDate) {
+      return res.status(400).json({ message: 'Job role and drive date are required' });
+    }
+
+    const branchesArray = typeof eligibleBranches === 'string'
+      ? eligibleBranches.split(',').map(b => b.trim()).filter(Boolean)
+      : (eligibleBranches || []);
+
+    const drive = new PlacementDrive({
+      companyId: hrRecord.companyId._id,
+      jobRole,
+      driveDate,
+      eligibleBranches: branchesArray,
+      minCgpa: parseFloat(minCgpa) || 0,
+      packageOffered: parseFloat(packageOffered) || 0,
+      description: description || '',
+      requiredStudents: parseInt(requiredStudents) || 1,
+      status: 'upcoming'
+    });
+
+    await drive.save();
+    await drive.populate('companyId', 'name');
+
+    res.status(201).json({
+      success: true,
+      message: `Drive created for ${hrRecord.companyId.name}`,
+      drive
+    });
+  } catch (error) {
+    console.error('HR create drive error:', error);
+    res.status(500).json({ message: 'Failed to create drive: ' + error.message });
+  }
+});
+
+// HR: Get drives for their company
+router.get('/hr/my-drives', authMiddleware, requireRole('hr'), async (req, res) => {
+  try {
+    const HR = require('../models/HR');
+    const hrRecord = await HR.findOne({ userId: req.user.id });
+    if (!hrRecord) return res.status(403).json({ message: 'HR record not found' });
+
+    const drives = await PlacementDrive.find({ companyId: hrRecord.companyId })
+      .populate('companyId', 'name requiredSkills')
+      .sort({ driveDate: -1 });
+
+    const formattedDrives = drives.filter(d => d.companyId).map(drive => ({
+      id: drive._id,
+      company_id: drive.companyId._id,
+      company_name: drive.companyId.name,
+      job_role: drive.jobRole,
+      drive_date: drive.driveDate,
+      eligible_branches: Array.isArray(drive.eligibleBranches) ? drive.eligibleBranches.join(', ') : '',
+      min_cgpa: drive.minCgpa,
+      package_offered: drive.packageOffered,
+      description: drive.description,
+      status: drive.status,
+      registered_students: drive.registeredStudents,
+      selected_students: drive.selectedStudents,
+      created_at: drive.createdAt
+    }));
+
+    res.json({ success: true, drives: formattedDrives });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch drives' });
+  }
+});
+
 // Create drive (Admin only)
 router.post('/', authMiddleware, requireRole('admin'), async (req, res) => {
   try {
