@@ -49,6 +49,32 @@ router.post('/', authMiddleware, requireRole('student'), async (req, res) => {
       return res.status(400).json({ message: 'Already applied for this drive' });
     }
 
+    // ── BACKEND CGPA ELIGIBILITY CHECK ──────────────────────────────────────
+    if (drive.minCgpa && drive.minCgpa > 0) {
+      const studentCgpa = student.cgpa || 0;
+      if (studentCgpa < drive.minCgpa) {
+        return res.status(403).json({
+          message: `You are not eligible for this drive. Minimum CGPA required is ${drive.minCgpa}, but your CGPA is ${studentCgpa}.`,
+          notEligible: true,
+          required: drive.minCgpa,
+          yours: studentCgpa
+        });
+      }
+    }
+
+    // ── BACKEND BRANCH ELIGIBILITY CHECK ────────────────────────────────────
+    if (drive.eligibleBranches && drive.eligibleBranches.length > 0) {
+      const studentBranch = (student.branch || '').toUpperCase();
+      const eligibleBranches = drive.eligibleBranches.map(b => b.toUpperCase());
+      if (!eligibleBranches.includes(studentBranch)) {
+        return res.status(403).json({
+          message: `Your branch (${student.branch}) is not eligible for this drive. Eligible branches: ${drive.eligibleBranches.join(', ')}.`,
+          notEligible: true
+        });
+      }
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
     // Get company to check required skills
     const company = await Company.findById(drive.companyId);
     if (!company) {
