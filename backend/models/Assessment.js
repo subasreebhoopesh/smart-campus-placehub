@@ -33,6 +33,10 @@ const assessmentSchema = new mongoose.Schema({
   passingMarks: { type: Number, default: 0 },
   questions: [questionSchema],
   isActive: { type: Boolean, default: true },
+  // Scheduled window: students can only take the test between these times
+  scheduledStart: { type: Date, default: null },
+  scheduledEnd: { type: Date, default: null },
+  notificationSent: { type: Boolean, default: false }, // track if students were notified
   createdAt: { type: Date, default: Date.now }
 });
 

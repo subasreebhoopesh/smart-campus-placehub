@@ -52,6 +52,7 @@ export default function HRDrives() {
   const [submitting, setSubmitting] = useState(false);
   const [selectedBranches, setSelectedBranches] = useState<string[]>([]);
   const [rounds, setRounds] = useState<Round[]>([]);
+  const [assessmentSchedule, setAssessmentSchedule] = useState({ startTime: '', endTime: '' });
 
   const [form, setForm] = useState({
     jobRole: '',
@@ -117,6 +118,7 @@ export default function HRDrives() {
           packageOffered: parseFloat(form.packageOffered) || 0,
           requiredStudents: parseInt(form.requiredStudents) || 1,
           interviewRounds: rounds.filter(r => r.roundType),
+          assessmentSchedule: rounds.some(r => r.roundType === 'online_mcq') ? assessmentSchedule : undefined,
         })
       });
       const data = await res.json();
@@ -130,6 +132,7 @@ export default function HRDrives() {
         setForm({ jobRole: '', driveDate: '', minCgpa: '', packageOffered: '', description: '', requiredStudents: '1' });
         setSelectedBranches([]);
         setRounds([]);
+        setAssessmentSchedule({ startTime: '', endTime: '' });
         fetchDrives();
       } else {
         toast({ title: 'Error', description: data.message, variant: 'destructive' });
@@ -318,6 +321,39 @@ export default function HRDrives() {
                 ))}
               </div>
             </div>
+
+            {/* Schedule window — shown only when MCQ round exists */}
+            {rounds.some(r => r.roundType === 'online_mcq') && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
+                <p className="text-sm font-semibold text-blue-800">⏰ Set Test Window for Students</p>
+                <p className="text-xs text-blue-600">Students will be notified and can only take the test during this window.</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-xs">Test Starts At *</Label>
+                    <Input
+                      type="datetime-local"
+                      className="mt-1 bg-white text-sm"
+                      value={assessmentSchedule.startTime}
+                      onChange={(e) => setAssessmentSchedule(prev => ({ ...prev, startTime: e.target.value }))}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Test Ends At *</Label>
+                    <Input
+                      type="datetime-local"
+                      className="mt-1 bg-white text-sm"
+                      value={assessmentSchedule.endTime}
+                      onChange={(e) => setAssessmentSchedule(prev => ({ ...prev, endTime: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                {assessmentSchedule.startTime && assessmentSchedule.endTime && (
+                  <p className="text-xs text-green-700 font-medium">
+                    ✅ Students will be notified and the test link will be active from {new Date(assessmentSchedule.startTime).toLocaleString('en-IN')} to {new Date(assessmentSchedule.endTime).toLocaleString('en-IN')}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>

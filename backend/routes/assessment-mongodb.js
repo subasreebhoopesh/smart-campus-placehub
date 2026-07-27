@@ -202,6 +202,8 @@ router.get('/drive/:driveId', authMiddleware, requireRole('student'), async (req
       passingMarks: assessment.passingMarks,
       questions: safeQuestions,
       alreadyAttempted: !!existing,
+      scheduledStart: assessment.scheduledStart,
+      scheduledEnd: assessment.scheduledEnd,
       result: existing ? {
         totalScore: existing.totalScore,
         percentage: existing.percentage,
