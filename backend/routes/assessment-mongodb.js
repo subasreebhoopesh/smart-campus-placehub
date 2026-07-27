@@ -116,12 +116,30 @@ router.get('/admin/results/:assessmentId', authMiddleware, requireRole('admin'),
 });
 
 // ─── STUDENT: Get all available assessments ───────────────────────────────────
+// Only shows assessments for drives the student has actually applied to
 router.get('/student/available', authMiddleware, requireRole('student'), async (req, res) => {
   try {
     const student = await Student.findOne({ userId: req.user.id });
     if (!student) return res.status(404).json({ message: 'Student not found' });
 
-    const assessments = await Assessment.find({ isActive: true })
+    // Get driveIds where this student has applied
+    const Application = require('../models/Application');
+    const studentApplications = await Application.find({
+      studentId: student._id,
+      status: { $in: ['applied', 'shortlisted', 'pending'] }
+    }).select('driveId');
+
+    const appliedDriveIds = studentApplications.map(a => a.driveId?.toString()).filter(Boolean);
+
+    if (appliedDriveIds.length === 0) {
+      return res.json([]);
+    }
+
+    // Only get assessments for drives the student applied to
+    const assessments = await Assessment.find({
+      isActive: true,
+      driveId: { $in: appliedDriveIds }
+    })
       .populate({ path: 'driveId', select: 'jobRole driveDate status' })
       .populate({ path: 'companyId', select: 'name' })
       .sort({ createdAt: -1 });
@@ -144,6 +162,8 @@ router.get('/student/available', authMiddleware, requireRole('student'), async (
         totalMarks: a.totalMarks,
         passingMarks: a.passingMarks,
         questionCount: a.questions.length,
+        scheduledStart: a.scheduledStart,
+        scheduledEnd: a.scheduledEnd,
         alreadyAttempted: !!result,
         result: result ? {
           totalScore: result.totalScore,

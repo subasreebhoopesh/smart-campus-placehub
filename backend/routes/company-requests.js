@@ -7,6 +7,35 @@ const User = require('../models/User');
 const HR = require('../models/HR');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 
+// ─── PUBLIC: Check registration request status by email ───────────────────
+// GET /api/company-requests/status/:email  (no auth required)
+router.get('/status/:email', async (req, res) => {
+  try {
+    const email = req.params.email.toLowerCase().trim();
+    const request = await CompanyRequest.findOne({ hrEmail: email }).sort({ createdAt: -1 });
+
+    if (!request) {
+      return res.json({ found: false, message: 'No registration request found for this email' });
+    }
+
+    res.json({
+      found: true,
+      status: request.status,
+      companyName: request.companyName,
+      submittedAt: request.createdAt,
+      reviewedAt: request.reviewedAt,
+      adminRemarks: request.adminRemarks || '',
+      message: request.status === 'pending'
+        ? 'Your request is under review. Please wait for admin approval.'
+        : request.status === 'approved'
+        ? 'Your request was approved! You can now login with your registered email and password.'
+        : `Your request was rejected. Reason: ${request.adminRemarks || 'Not specified'}`
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to check status' });
+  }
+});
+
 // ─── PUBLIC: Company submits registration request ──────────────────────────────
 // POST /api/company-requests/register  (no auth required)
 router.post('/register', async (req, res) => {
