@@ -5,7 +5,6 @@ import {
   Home,
   LayoutDashboard,
   Users,
-  Building2,
   Briefcase,
   BarChart3,
   FileText,
@@ -34,9 +33,7 @@ interface SidebarProps {
 const adminMenuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
   { icon: Users, label: 'Students', path: '/admin/students' },
-  { icon: Building2, label: 'Companies', path: '/admin/companies' },
   { icon: ClipboardList, label: 'Company Requests', path: '/admin/company-requests' },
-  { icon: Briefcase, label: 'Placement Drives', path: '/admin/drives' },
   { icon: ClipboardList, label: 'Applications', path: '/admin/applications' },
   { icon: FileCheck, label: 'Document Verification', path: '/admin/documents' },
   { icon: ClipboardList, label: 'Assessments', path: '/admin/assessments' },
