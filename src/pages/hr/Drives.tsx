@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Briefcase, Calendar, Users, GraduationCap, Loader2 } from 'lucide-react';
+import { Plus, Briefcase, Calendar, Users, GraduationCap, Loader2, Trash2, PlusCircle } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,12 +8,27 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 const BRANCHES = ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL', 'MBA'];
+
+const ROUND_TYPES = [
+  { value: 'online_mcq', label: '📝 Online MCQ Test', description: 'Auto-generates role-relevant MCQ questions with timer' },
+  { value: 'aptitude_test', label: '🧮 Aptitude Test', description: 'Logical reasoning and quantitative aptitude' },
+  { value: 'technical_interview', label: '💻 Technical Interview', description: 'Face-to-face technical round' },
+  { value: 'group_discussion', label: '👥 Group Discussion', description: 'Group discussion round' },
+  { value: 'hr_interview', label: '🤝 HR Interview', description: 'Final HR round' },
+];
+
+interface Round {
+  roundNumber: number;
+  roundType: string;
+  description: string;
+}
 
 interface Drive {
   id: string;
@@ -36,6 +51,7 @@ export default function HRDrives() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedBranches, setSelectedBranches] = useState<string[]>([]);
+  const [rounds, setRounds] = useState<Round[]>([]);
 
   const [form, setForm] = useState({
     jobRole: '',
@@ -70,6 +86,18 @@ export default function HRDrives() {
     );
   };
 
+  const addRound = () => {
+    setRounds(prev => [...prev, { roundNumber: prev.length + 1, roundType: '', description: '' }]);
+  };
+
+  const removeRound = (index: number) => {
+    setRounds(prev => prev.filter((_, i) => i !== index).map((r, i) => ({ ...r, roundNumber: i + 1 })));
+  };
+
+  const updateRound = (index: number, field: keyof Round, value: string | number) => {
+    setRounds(prev => prev.map((r, i) => i === index ? { ...r, [field]: value } : r));
+  };
+
   const handleSubmit = async () => {
     if (!form.jobRole || !form.driveDate) {
       toast({ title: 'Missing Fields', description: 'Job role and drive date are required', variant: 'destructive' });
@@ -88,15 +116,20 @@ export default function HRDrives() {
           minCgpa: parseFloat(form.minCgpa) || 0,
           packageOffered: parseFloat(form.packageOffered) || 0,
           requiredStudents: parseInt(form.requiredStudents) || 1,
+          interviewRounds: rounds.filter(r => r.roundType),
         })
       });
       const data = await res.json();
 
       if (res.ok && data.success) {
-        toast({ title: '✅ Drive Created!', description: data.message });
+        const msg = data.assessmentCreated
+          ? `Drive created! Online MCQ assessment auto-generated for students.`
+          : data.message;
+        toast({ title: '✅ Drive Created!', description: msg });
         setDialogOpen(false);
         setForm({ jobRole: '', driveDate: '', minCgpa: '', packageOffered: '', description: '', requiredStudents: '1' });
         setSelectedBranches([]);
+        setRounds([]);
         fetchDrives();
       } else {
         toast({ title: 'Error', description: data.message, variant: 'destructive' });
@@ -229,6 +262,61 @@ export default function HRDrives() {
             <div>
               <Label>Description</Label>
               <Textarea className="mt-1" placeholder="Job description, requirements..." rows={3} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+            </div>
+
+            {/* Interview Rounds */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <Label>Interview Rounds</Label>
+                <Button type="button" variant="outline" size="sm" onClick={addRound} className="gap-1">
+                  <PlusCircle className="h-3.5 w-3.5" /> Add Round
+                </Button>
+              </div>
+
+              {rounds.length === 0 && (
+                <p className="text-xs text-muted-foreground py-2 px-3 bg-gray-50 rounded border border-dashed">
+                  No rounds added. Click "Add Round" to define interview stages.
+                </p>
+              )}
+
+              <div className="space-y-3">
+                {rounds.map((round, index) => (
+                  <div key={index} className="border rounded-lg p-3 space-y-2 bg-gray-50">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-primary">Round {round.roundNumber}</span>
+                      <Button type="button" variant="ghost" size="sm" className="h-6 w-6 p-0 text-red-400 hover:text-red-600" onClick={() => removeRound(index)}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                    <Select value={round.roundType} onValueChange={(val) => updateRound(index, 'roundType', val)}>
+                      <SelectTrigger className="bg-white">
+                        <SelectValue placeholder="Select round type..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ROUND_TYPES.map(rt => (
+                          <SelectItem key={rt.value} value={rt.value}>
+                            <div>
+                              <div>{rt.label}</div>
+                              <div className="text-xs text-muted-foreground">{rt.description}</div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {round.roundType === 'online_mcq' && (
+                      <div className="text-xs bg-blue-50 border border-blue-200 rounded p-2 text-blue-700">
+                        🤖 AI will auto-generate 20 MCQ questions based on "{form.jobRole || 'the job role'}" with a 30-minute timer for students.
+                      </div>
+                    )}
+                    <Input
+                      className="bg-white text-sm"
+                      placeholder="Round description (optional)"
+                      value={round.description}
+                      onChange={(e) => updateRound(index, 'description', e.target.value)}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <DialogFooter>
