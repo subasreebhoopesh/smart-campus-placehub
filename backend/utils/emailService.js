@@ -213,6 +213,41 @@ async function sendDocumentVerificationEmail(studentEmail, studentName, status, 
   return sendEmail({ to: studentEmail, subject, html, text });
 }
 
+/**
+ * Send offer letter email to student
+ */
+async function sendOfferLetterEmail(studentEmail, studentName, companyName, jobRole, packageOffered) {
+  const subject = `🎉 Offer Letter from ${companyName} - ${jobRole}`;
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+      <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 30px; text-align: center;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">🎉 Congratulations!</h1>
+        <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0;">You have received an Offer Letter</p>
+      </div>
+      <div style="padding: 30px;">
+        <p style="font-size: 16px;">Dear <strong>${studentName}</strong>,</p>
+        <p>We are delighted to inform you that <strong>${companyName}</strong> has issued you an official offer letter for the following position:</p>
+        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #6366f1;">
+          <p style="margin: 6px 0;"><strong>🏢 Company:</strong> ${companyName}</p>
+          <p style="margin: 6px 0;"><strong>💼 Position:</strong> ${jobRole}</p>
+          <p style="margin: 6px 0;"><strong>💰 Package:</strong> Rs. ${packageOffered} LPA</p>
+        </div>
+        <p>To download your offer letter, please log in to the <strong>Smart Campus PlaceHub</strong> portal and go to <strong>My Applications</strong>.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://smart-campus-placehub.vercel.app/student/applications" 
+             style="background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            View My Applications →
+          </a>
+        </div>
+        <p style="color: #6b7280; font-size: 14px;">This is an automated notification from Smart Campus PlaceHub.</p>
+      </div>
+    </div>
+  `;
+  const text = `Congratulations ${studentName}! You have received an offer letter from ${companyName} for ${jobRole} at Rs. ${packageOffered} LPA. Login to Smart Campus PlaceHub to download it.`;
+
+  return sendEmail({ to: studentEmail, subject, html, text });
+}
+
 module.exports = {
   sendEmail,
   sendSelectionEmail,
@@ -220,5 +255,6 @@ module.exports = {
   sendNewApplicationEmail,
   sendAdminPlacementEmail,
   sendInterviewScheduleEmail,
-  sendDocumentVerificationEmail
+  sendDocumentVerificationEmail,
+  sendOfferLetterEmail
 };

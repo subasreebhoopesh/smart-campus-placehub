@@ -129,6 +129,20 @@ router.post('/hr/send/:applicationId', authMiddleware, requireRole('hr'), async 
       relatedType: 'application'
     });
 
+    // Send email to student
+    const { sendOfferLetterEmail } = require('../utils/emailService');
+    const studentEmail = application.studentId?.userId?.email;
+    const studentName = application.studentId?.userId?.name;
+    if (studentEmail) {
+      sendOfferLetterEmail(
+        studentEmail,
+        studentName,
+        offerData.companyName,
+        offerData.jobRole,
+        offerData.packageOffered
+      ).catch(err => console.error('Offer letter email error:', err));
+    }
+
     res.json({ success: true, message: 'Offer letter sent to student', offerData });
   } catch (error) {
     console.error('HR send offer letter error:', error);
