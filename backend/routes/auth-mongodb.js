@@ -118,6 +118,16 @@ router.post('/login', async (req, res) => {
           id: hr.companyId._id,
           name: hr.companyId.name
         }));
+
+      // Fix: if user name is generic (e.g. 'Admin User'), use company contactPerson
+      const genericNames = ['Admin User', 'HR User', 'admin', 'hr'];
+      if (genericNames.includes(user.name) && hrRecords.length > 0) {
+        const contactPerson = hrRecords[0]?.companyId?.contactPerson;
+        if (contactPerson && !genericNames.includes(contactPerson)) {
+          await User.findByIdAndUpdate(user._id, { name: contactPerson });
+          user.name = contactPerson;
+        }
+      }
     }
 
     if (user.role === 'student') {
@@ -149,6 +159,21 @@ router.post('/login', async (req, res) => {
 // Logout
 router.post('/logout', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'Logged out successfully' });
+});
+
+// Update own name/email (any role)
+router.put('/update-profile', authMiddleware, async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: 'Name is required' });
+    }
+    await User.findByIdAndUpdate(req.user.id, { name: name.trim() });
+    res.json({ success: true, message: 'Profile updated', name: name.trim() });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Failed to update profile' });
+  }
 });
 
 module.exports = router;

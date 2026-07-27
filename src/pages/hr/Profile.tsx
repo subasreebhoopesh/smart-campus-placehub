@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Building2, Mail, User, Briefcase, Users, CheckCircle, Calendar, MapPin, Globe } from 'lucide-react';
+import { Building2, Mail, User, Briefcase, Users, CheckCircle, Calendar, Globe, Pencil, Save } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import api from '@/services/api';
 import { format } from 'date-fns';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
 export default function HRProfile() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState<any>(null);
+  const [editingName, setEditingName] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     fetchProfileData();
@@ -25,6 +32,7 @@ export default function HRProfile() {
       
       if (response.success) {
         setProfileData(response.data);
+        setNewName(response.data.hrInfo.name);
       }
     } catch (error: any) {
       console.error('Failed to fetch HR profile:', error);
@@ -35,6 +43,38 @@ export default function HRProfile() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSaveName = async () => {
+    if (!newName.trim()) return;
+    setSavingName(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_BASE}/auth/update-profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: newName.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        updateUser({ name: newName.trim() });
+        setProfileData((prev: any) => ({
+          ...prev,
+          hrInfo: { ...prev.hrInfo, name: newName.trim() },
+        }));
+        setEditingName(false);
+        toast({ title: 'Name updated!', description: 'Your name has been changed.' });
+      } else {
+        toast({ title: 'Error', description: data.message, variant: 'destructive' });
+      }
+    } catch {
+      toast({ title: 'Error', description: 'Failed to update name', variant: 'destructive' });
+    } finally {
+      setSavingName(false);
     }
   };
 
@@ -80,7 +120,29 @@ export default function HRProfile() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Name</p>
-                <p className="font-medium">{hrInfo.name}</p>
+                {editingName ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      className="h-8"
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={handleSaveName} disabled={savingName}>
+                      <Save className="h-4 w-4" />
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => { setEditingName(false); setNewName(hrInfo.name); }}>
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">{hrInfo.name}</p>
+                    <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setEditingName(true)}>
+                      <Pencil className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
               </div>
               <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Email</p>

@@ -237,7 +237,7 @@ export function TopNav({ user, onLogout }: TopNavProps) {
               <Button variant="ghost" className="gap-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage 
-                    src={user.avatar ? `http://localhost:3001${user.avatar}` : undefined} 
+                    src={user.avatar ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3001'}${user.avatar}` : undefined} 
                     alt={user.name}
                   />
                   <AvatarFallback>
