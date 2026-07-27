@@ -86,11 +86,18 @@ export default function Login() {
         {/* Additional Info */}
         <div className="text-center space-y-4">
           <Card className="bg-white/50 backdrop-blur-sm border-primary/20">
-            <CardContent className="py-4">
+            <CardContent className="py-4 flex flex-col sm:flex-row items-center justify-center gap-4">
               <p className="text-sm text-muted-foreground">
                 <span className="font-semibold text-foreground">New Student?</span>{' '}
                 <Link to="/student/register" className="text-primary hover:underline font-medium">
                   Register here
+                </Link>
+              </p>
+              <span className="hidden sm:inline text-muted-foreground">|</span>
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">New Company?</span>{' '}
+                <Link to="/company/register" className="text-purple-600 hover:underline font-medium">
+                  Register your company
                 </Link>
               </p>
             </CardContent>

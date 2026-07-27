@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Building2, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -104,7 +104,13 @@ export default function HRLogin() {
           <div className="mt-4 text-center text-sm text-muted-foreground">
             <p>Contact admin for login credentials</p>
           </div>
-          <div className="mt-4 text-center">
+          <div className="mt-4 text-center space-y-2">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">New Company?</span>{' '}
+              <Link to="/company/register" className="text-purple-600 hover:underline font-medium">
+                Register your company here
+              </Link>
+            </p>
             <Button
               variant="link"
               onClick={() => navigate('/login')}
