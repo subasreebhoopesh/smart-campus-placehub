@@ -2,97 +2,126 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system - Blue/Indigo theme for Placement Management System */
+/* ==========================================
+   PROFESSIONAL UI DESIGN SYSTEM
+   Perfect for Interviews & Production
+   Modern Blue/Indigo Professional Theme
+   ========================================== */
 
 @layer base {
   :root {
-    /* Pastel Color Theme - Soft and Gentle */
+    /* Professional Light Theme - Clean & Modern */
     --background: 210 40% 98%;
-    --foreground: 240 10% 25%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 25%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 25%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Pastel Blue Primary */
-    --primary: 210 60% 75%;
-    --primary-foreground: 240 10% 25%;
+    /* Professional Blue - Primary Actions */
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Pastel Pink Secondary */
-    --secondary: 340 60% 88%;
-    --secondary-foreground: 240 10% 25%;
+    /* Elegant Slate - Secondary */
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 222 47% 11%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 240 5% 50%;
+    --muted-foreground: 215 16% 47%;
 
-    /* Pastel Lavender Accent */
-    --accent: 270 50% 85%;
-    --accent-foreground: 240 10% 25%;
+    /* Professional Indigo - Accent */
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
 
-    /* Pastel Red for Destructive */
-    --destructive: 0 60% 75%;
+    /* Alert Red - Destructive */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 30% 90%;
-    --input: 220 30% 90%;
-    --ring: 210 60% 75%;
+    /* Success Green */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
 
-    --radius: 0.75rem;
+    /* Warning Orange */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 10% 25%;
-    --sidebar-primary: 210 60% 75%;
-    --sidebar-primary-foreground: 240 10% 25%;
-    --sidebar-accent: 270 50% 85%;
-    --sidebar-accent-foreground: 240 10% 25%;
-    --sidebar-border: 220 30% 90%;
-    --sidebar-ring: 210 60% 75%;
+    /* Info Blue */
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar Professional Colors */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 91% 60%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 221 83% 53%;
   }
 
   .dark {
-    /* Dark Mode Pastel - Muted and Soft */
-    --background: 240 15% 12%;
-    --foreground: 210 40% 95%;
+    /* Professional Dark Mode - Modern & Elegant */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 240 15% 15%;
-    --card-foreground: 210 40% 95%;
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 240 15% 15%;
-    --popover-foreground: 210 40% 95%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Pastel Blue for Dark Mode */
-    --primary: 210 50% 65%;
-    --primary-foreground: 240 15% 12%;
+    /* Vibrant Blue for Dark */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
 
-    /* Pastel Pink for Dark Mode */
-    --secondary: 340 40% 60%;
-    --secondary-foreground: 240 15% 12%;
+    /* Subtle Slate for Dark */
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 240 15% 20%;
-    --muted-foreground: 240 5% 70%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    /* Pastel Lavender for Dark Mode */
-    --accent: 270 40% 60%;
-    --accent-foreground: 240 15% 12%;
+    /* Bright Indigo for Dark */
+    --accent: 221 83% 53%;
+    --accent-foreground: 0 0% 100%;
 
-    /* Pastel Red for Dark Mode */
-    --destructive: 0 50% 65%;
+    /* Bright Red for Dark */
+    --destructive: 0 62% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 15% 25%;
-    --input: 240 15% 25%;
-    --ring: 210 50% 65%;
+    /* Success Green Dark */
+    --success: 142 69% 58%;
+    --success-foreground: 222 47% 11%;
 
-    --sidebar-background: 240 15% 15%;
-    --sidebar-foreground: 210 40% 95%;
-    --sidebar-primary: 210 50% 65%;
-    --sidebar-primary-foreground: 240 15% 12%;
-    --sidebar-accent: 270 40% 60%;
-    --sidebar-accent-foreground: 240 15% 12%;
-    --sidebar-border: 240 15% 25%;
-    --sidebar-ring: 210 50% 65%;
+    /* Warning Orange Dark */
+    --warning: 38 92% 60%;
+    --warning-foreground: 222 47% 11%;
+
+    /* Info Blue Dark */
+    --info: 199 89% 58%;
+    --info-foreground: 222 47% 11%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 221 83% 53%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -102,11 +131,326 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    scroll-behavior: smooth;
+  }
+
+  /* Professional Typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  /* Smooth Focus Styles */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/30;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
   }
 }
 
-/* 3D Card Effects */
+/* ==========================================
+   PROFESSIONAL COMPONENT STYLES
+   ========================================== */
+
+@layer components {
+  /* Professional Card with Hover Effect */
+  .card-interactive {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Professional Button Hover */
+  .btn-hover {
+    @apply transition-all duration-200 hover:scale-105 active:scale-95;
+  }
+
+  /* Gradient Background for Headers */
+  .gradient-header {
+    background: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(217, 91%, 60%) 100%);
+  }
+
+  /* Professional Glass Effect */
+  .glass-effect {
+    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-white/20;
+  }
+
+  /* Success Status Badge */
+  .status-success {
+    @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400;
+  }
+
+  /* Warning Status Badge */
+  .status-warning {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400;
+  }
+
+  /* Danger Status Badge */
+  .status-danger {
+    @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
+  }
+
+  /* Info Status Badge */
+  .status-info {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400;
+  }
+}
+
+/* ==========================================
+   PROFESSIONAL ANIMATIONS
+   Smooth, Modern, Interview-Ready
+   ========================================== */
+
+/* Fade In Animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide In from Left */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide In from Right */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale In Animation */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Bounce In Animation */
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Smooth Floating Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Gradient Shift Animation */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Shimmer Loading Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Spin Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Shake Animation for Errors */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-10px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(10px);
+  }
+}
+
+/* ==========================================
+   ANIMATION UTILITY CLASSES
+   ========================================== */
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.6s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Animation Delays */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.delay-700 {
+  animation-delay: 700ms;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
+
+/* ==========================================
+   3D EFFECTS & TRANSFORMS
+   ========================================== */
+
 @layer utilities {
   .rotate-y-12 {
     transform: rotateY(12deg);
@@ -123,114 +467,127 @@
   .backface-hidden {
     backface-visibility: hidden;
   }
-}
 
-/* Smooth animations for 3D cards */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
+  /* Hover Lift Effect */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
   }
-  50% {
-    transform: translateY(-10px);
-  }
-}
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Homepage Animations */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  /* Hover Grow Effect */
+  .hover-grow {
+    @apply transition-transform duration-300 hover:scale-105;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  /* Hover Glow Effect */
+  .hover-glow {
+    @apply transition-shadow duration-300 hover:shadow-2xl;
   }
 }
 
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
+/* ==========================================
+   PROFESSIONAL LOADING STATES
+   ========================================== */
+
+.skeleton {
+  @apply animate-shimmer bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded;
+  background-size: 200% 100%;
+}
+
+/* Loading Spinner */
+.spinner {
+  @apply inline-block w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin;
+}
+
+/* ==========================================
+   PROFESSIONAL TRANSITIONS
+   ========================================== */
+
+.transition-smooth {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.transition-fast {
+  @apply transition-all duration-150 ease-in-out;
+}
+
+.transition-slow {
+  @apply transition-all duration-500 ease-in-out;
+}
+
+/* ==========================================
+   GRADIENT BACKGROUNDS
+   ========================================== */
+
+.gradient-primary {
+  background: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(217, 91%, 60%) 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, hsl(142, 76%, 36%) 0%, hsl(142, 69%, 58%) 100%);
+}
+
+.gradient-warning {
+  background: linear-gradient(135deg, hsl(38, 92%, 50%) 0%, hsl(38, 92%, 60%) 100%);
+}
+
+.gradient-danger {
+  background: linear-gradient(135deg, hsl(0, 84%, 60%) 0%, hsl(0, 62%, 48%) 100%);
+}
+
+.gradient-info {
+  background: linear-gradient(135deg, hsl(199, 89%, 48%) 0%, hsl(199, 89%, 58%) 100%);
+}
+
+/* Animated Gradient Text */
+.gradient-text {
+  @apply bg-clip-text text-transparent animate-gradient;
+  background-image: linear-gradient(
+    90deg,
+    hsl(221, 83%, 53%),
+    hsl(217, 91%, 60%),
+    hsl(221, 83%, 53%)
+  );
+  background-size: 200% auto;
+}
+
+/* ==========================================
+   PROFESSIONAL SHADOWS
+   ========================================== */
+
+.shadow-professional {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-professional-lg {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15), 0 15px 20px -10px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================
+   PROFESSIONAL HOVER EFFECTS
+   ========================================== */
+
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-professional-lg hover:-translate-y-1 hover:scale-[1.02];
+}
+
+.button-hover {
+  @apply transition-all duration-200 hover:shadow-lg hover:brightness-110 active:scale-95;
+}
+
+/* ==========================================
+   RESPONSIVE UTILITIES
+   ========================================== */
+
+@media (max-width: 768px) {
+  .mobile-full {
+    @apply w-full;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+
+  .mobile-hidden {
+    @apply hidden;
   }
-}
 
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
+  .mobile-stack {
+    @apply flex-col;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out;
-}
-
-.animate-slide-in-left {
-  animation: slide-in-left 0.8s ease-out;
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.8s ease-out;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.6s ease-out;
-}
-
-.delay-100 {
-  animation-delay: 100ms;
-}
-
-.delay-200 {
-  animation-delay: 200ms;
-}
-
-.delay-300 {
-  animation-delay: 300ms;
-}
-
-.delay-500 {
-  animation-delay: 500ms;
-}
-
-.delay-1000 {
-  animation-delay: 1000ms;
-}
-
-/* Gradient Text Animation */
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
 }
