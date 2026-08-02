@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
 
+const interviewRoundSchema = new mongoose.Schema({
+  roundNumber: { type: Number, required: true },
+  roundType: {
+    type: String,
+    enum: ['online_mcq', 'technical_interview', 'hr_interview', 'group_discussion', 'aptitude_test'],
+    required: true
+  },
+  description: { type: String, default: '' }
+}, { _id: false });
+
 const placementDriveSchema = new mongoose.Schema({
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -43,6 +53,10 @@ const placementDriveSchema = new mongoose.Schema({
   requiredStudents: {
     type: Number,
     default: 1
+  },
+  interviewRounds: {
+    type: [interviewRoundSchema],
+    default: []
   },
   createdAt: {
     type: Date,
