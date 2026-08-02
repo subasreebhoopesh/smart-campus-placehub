@@ -168,7 +168,7 @@ export default function Home() {
           </Link>
           <div className="flex items-center gap-4">
             <Link to="/login">
-              <Button className="bg-gradient-to-r from-blue-300 to-purple-300 hover:from-blue-400 hover:to-purple-400 text-gray-800 shadow-md hover:shadow-lg transition-all">
+              <Button className="button-hover gradient-primary text-white shadow-md hover:shadow-lg transition-smooth">
                 Login
               </Button>
             </Link>
@@ -205,7 +205,7 @@ export default function Home() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/login">
-              <Button size="lg" className="gap-2 bg-gradient-to-r from-blue-300 to-purple-300 hover:from-blue-400 hover:to-purple-400 text-gray-800 shadow-xl hover:shadow-2xl transition-all hover:scale-105 text-lg px-8 py-6">
+              <Button size="lg" className="gap-2 button-hover gradient-primary text-white shadow-professional hover:shadow-professional-lg transition-smooth text-lg px-8 py-6 animate-scale-in delay-300">
                 <Zap className="h-5 w-5" />
                 Get Started Now
                 <ArrowRight className="h-5 w-5" />
@@ -243,9 +243,9 @@ export default function Home() {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
-              <Card key={index} className="text-center hover:shadow-2xl transition-all hover:scale-110 border-2 hover:border-blue-300 bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-blue-950/30">
+              <Card key={index} className="text-center card-hover shadow-professional animate-fade-in border-2 hover:border-primary bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-blue-950/30" style={{animationDelay: `${index * 100}ms`}}>
                 <CardContent className="pt-8 pb-6">
-                  <div className={`h-20 w-20 mx-auto mb-4 rounded-2xl ${stat.bgColor} flex items-center justify-center shadow-lg transform hover:rotate-12 transition-transform`}>
+                  <div className={`h-20 w-20 mx-auto mb-4 rounded-2xl ${stat.bgColor} flex items-center justify-center shadow-lg hover-grow transition-smooth`}>
                     <stat.icon className={`h-10 w-10 ${stat.color}`} />
                   </div>
                   <p className="text-4xl font-extrabold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
