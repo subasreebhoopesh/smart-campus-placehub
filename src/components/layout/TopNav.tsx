@@ -10,6 +10,7 @@ import {
   Check,
   CheckCheck,
   X,
+  Menu,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,9 +36,10 @@ interface TopNavProps {
     avatar?: string;
   };
   onLogout: () => void;
+  onMenuToggle?: () => void;
 }
 
-export function TopNav({ user, onLogout }: TopNavProps) {
+export function TopNav({ user, onLogout, onMenuToggle }: TopNavProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const { notifications, unreadCount, markAsRead, markAllAsRead, deleteNotification } = useNotifications();
@@ -101,6 +103,15 @@ export function TopNav({ user, onLogout }: TopNavProps) {
     <header className="fixed top-0 left-0 right-0 h-16 bg-card border-b border-border z-50">
       <div className="flex items-center justify-between h-full px-4">
         <div className="flex items-center gap-4">
+          {/* Hamburger for mobile */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={onMenuToggle}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
           <Link to="/" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <GraduationCap className="h-5 w-5 text-primary-foreground" />

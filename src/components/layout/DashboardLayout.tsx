@@ -1,7 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopNav } from './TopNav';
-import { cn } from '@/lib/utils';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -16,7 +15,8 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
     avatar: undefined as string | undefined,
   });
 
-  // Load user data from localStorage including avatar
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -33,7 +33,6 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
       }
     }
 
-    // Listen for storage changes (when profile photo is updated)
     const handleStorageChange = () => {
       const updatedUser = localStorage.getItem('user');
       if (updatedUser) {
@@ -52,10 +51,7 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
     };
 
     window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom event when profile is updated in same tab
     window.addEventListener('profileUpdated', handleStorageChange);
-
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('profileUpdated', handleStorageChange);
@@ -63,7 +59,6 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
   }, [userRole]);
 
   const handleLogout = () => {
-    // Handle logout logic here
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.href = '/login';
@@ -71,10 +66,26 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <TopNav user={user} onLogout={handleLogout} />
-      <Sidebar userRole={userRole} />
-      <main className="pt-16 pl-64 min-h-screen transition-all duration-300">
-        <div className="p-6">{children}</div>
+      <TopNav user={user} onLogout={handleLogout} onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <Sidebar
+        userRole={userRole}
+        mobileOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+
+      {/* Main content — shifts right on desktop, full width on mobile */}
+      <main className="pt-16 lg:pl-64 min-h-screen transition-all duration-300">
+        <div className="p-4 md:p-6">{children}</div>
       </main>
     </div>
   );
