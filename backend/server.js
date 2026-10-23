@@ -10,7 +10,12 @@ const app = express();
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(compression());
-const allowedOrigins = ['http://localhost:8080','http://localhost:5173',process.env.FRONTEND_URL].filter(Boolean);
+const allowedOrigins = [
+  'http://localhost:8080',
+  'http://localhost:5173',
+  'https://smart-campus-placehub.vercel.app',
+  process.env.FRONTEND_URL
+].filter(Boolean);
 app.use(cors({ origin: function(o,cb){ if(!o||allowedOrigins.includes(o)) return cb(null,true); cb(new Error('CORS')); }, credentials:true, methods:['GET','POST','PUT','PATCH','DELETE','OPTIONS'], allowedHeaders:['Content-Type','Authorization'] }));
 app.use(express.json({ limit:'10mb' }));
 app.use(express.urlencoded({ extended:true }));
@@ -68,22 +73,8 @@ app.use('/api/offer-letters', offerLetterRoutes);
 app.use('/api/assessments', assessmentRoutes);
 app.use('/api/company-requests', companyRequestRoutes);
 
-// Serve static files from React build (for production)
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
-  
-  // Handle React routing - serve index.html for all non-API routes
-  app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-      res.sendFile(path.join(__dirname, '../dist/index.html'));
-    }
-  });
-}
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: 'Server is running with MongoDB' });
-});
+// Health check (duplicate removed, keeping only one)
+// Note: First health check is already defined at line 20
 
 // Public stats endpoint (no auth required) for homepage
 app.get('/api/public/stats', async (req, res) => {
