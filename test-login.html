@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; }
+        #result { background: #f0f0f0; padding: 15px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>PlaceHub - Test Login</h1>
+    
+    <button onclick="testLogin()">Test Student Login</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function testLogin() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '⏳ Testing login...';
+            
+            try {
+                console.log('Starting login test...');
+                
+                const response = await fetch('http://localhost:3001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'sreesuba219.2005@gmail.com',
+                        password: 'Suba@2005',
+                        expectedRole: 'student'
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok && data.success) {
+                    resultDiv.innerHTML = `
+                        <h2 style="color: green;">✅ LOGIN SUCCESSFUL!</h2>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>User:</strong> ${data.user.name} (${data.user.email})</p>
+                        <p><strong>Role:</strong> ${data.user.role}</p>
+                        <p><strong>Token:</strong> ${data.token ? 'Received ✓' : 'Not received ✗'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h2 style="color: red;">❌ LOGIN FAILED</h2>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Message:</strong> ${data.message || 'Unknown error'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `
+                    <h2 style="color: red;">❌ ERROR</h2>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Check browser console for details (F12)</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

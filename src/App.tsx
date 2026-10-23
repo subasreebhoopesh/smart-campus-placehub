@@ -52,6 +52,8 @@ import HRSkills from "./pages/hr/Skills";
 import HRProfile from "./pages/hr/Profile";
 import HROfferLetters from "./pages/hr/OfferLetters";
 import HRDrives from "./pages/hr/Drives";
+import HRAssessments from "./pages/hr/Assessments";
+import QualifiedStudents from "./pages/hr/QualifiedStudents";
 import CompanyRegister from "./pages/CompanyRegister";
 import CompanyRequests from "./pages/admin/CompanyRequests";
 
@@ -118,6 +120,8 @@ const App = () => (
           <Route path="/hr/profile" element={<HRProfile />} />
           <Route path="/hr/offer-letters" element={<HROfferLetters />} />
           <Route path="/hr/drives" element={<HRDrives />} />
+          <Route path="/hr/assessments" element={<HRAssessments />} />
+          <Route path="/hr/qualified-students/:assessmentId" element={<QualifiedStudents />} />
 
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />

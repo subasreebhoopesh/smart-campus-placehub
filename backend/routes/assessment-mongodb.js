@@ -368,4 +368,196 @@ router.get('/my-result/:driveId', authMiddleware, requireRole('student'), async 
   }
 });
 
+// ─── HR: Get assessments for company ──────────────────────────────────────────
+router.get('/hr/assessments', authMiddleware, requireRole('hr'), async (req, res) => {
+  try {
+    const HR = require('../models/HR');
+    const hr = await HR.findOne({ userId: req.user.id });
+    if (!hr) return res.status(404).json({ message: 'HR not found' });
+
+    const assessments = await Assessment.find({ companyId: hr.companyId })
+      .populate('driveId', 'jobRole driveDate status')
+      .sort({ createdAt: -1 });
+
+    const results = await Promise.all(assessments.map(async (a) => {
+      const totalAttempts = await AssessmentResult.countDocuments({ assessmentId: a._id });
+      const passedCount = await AssessmentResult.countDocuments({ 
+        assessmentId: a._id, 
+        passed: true 
+      });
+      
+      return {
+        id: a._id,
+        title: a.title,
+        description: a.description,
+        driveId: a.driveId?._id,
+        jobRole: a.driveId?.jobRole,
+        driveDate: a.driveId?.driveDate,
+        driveStatus: a.driveId?.status,
+        duration: a.duration,
+        totalMarks: a.totalMarks,
+        passingMarks: a.passingMarks,
+        questionCount: a.questions.length,
+        totalAttempts,
+        passedCount,
+        isActive: a.isActive,
+        createdAt: a.createdAt
+      };
+    }));
+
+    res.json(results);
+  } catch (error) {
+    console.error('HR get assessments error:', error);
+    res.status(500).json({ message: 'Failed to fetch assessments' });
+  }
+});
+
+// ─── HR: Get qualified students (passed assessments only) ─────────────────────
+router.get('/hr/qualified-students/:assessmentId', authMiddleware, requireRole('hr'), async (req, res) => {
+  try {
+    const HR = require('../models/HR');
+    const hr = await HR.findOne({ userId: req.user.id });
+    if (!hr) return res.status(404).json({ message: 'HR not found' });
+
+    const assessment = await Assessment.findById(req.params.assessmentId);
+    if (!assessment) return res.status(404).json({ message: 'Assessment not found' });
+
+    // Check if assessment belongs to HR's company
+    if (assessment.companyId.toString() !== hr.companyId.toString()) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    // Get only students who PASSED the assessment
+    const passedResults = await AssessmentResult.find({ 
+      assessmentId: assessment._id,
+      passed: true  // Only passed students
+    })
+      .populate({ 
+        path: 'studentId', 
+        populate: { path: 'userId', select: 'name email profilePhotoUrl' } 
+      })
+      .sort({ totalScore: -1 }); // Highest score first
+
+    const students = passedResults.map(r => ({
+      id: r.studentId?._id,
+      name: r.studentId?.userId?.name,
+      email: r.studentId?.userId?.email,
+      profilePhotoUrl: r.studentId?.userId?.profilePhotoUrl,
+      rollNumber: r.studentId?.rollNumber,
+      branch: r.studentId?.branch,
+      cgpa: r.studentId?.cgpa,
+      skills: r.studentId?.skills || [],
+      phone: r.studentId?.phone,
+      resumeUrl: r.studentId?.resumeUrl,
+      // Assessment result details
+      assessmentScore: r.totalScore,
+      assessmentMarks: r.totalMarks,
+      assessmentPercentage: r.percentage,
+      timeTaken: r.timeTaken,
+      submittedAt: r.submittedAt,
+      passed: r.passed
+    }));
+
+    res.json({
+      assessmentTitle: assessment.title,
+      passingMarks: assessment.passingMarks,
+      totalMarks: assessment.totalMarks,
+      qualifiedCount: students.length,
+      students
+    });
+  } catch (error) {
+    console.error('HR get qualified students error:', error);
+    res.status(500).json({ message: 'Failed to fetch qualified students' });
+  }
+});
+
+// ─── HR: Get all results for assessment (including failed) ────────────────────
+router.get('/hr/all-results/:assessmentId', authMiddleware, requireRole('hr'), async (req, res) => {
+  try {
+    const HR = require('../models/HR');
+    const hr = await HR.findOne({ userId: req.user.id });
+    if (!hr) return res.status(404).json({ message: 'HR not found' });
+
+    const assessment = await Assessment.findById(req.params.assessmentId);
+    if (!assessment) return res.status(404).json({ message: 'Assessment not found' });
+
+    // Check if assessment belongs to HR's company
+    if (assessment.companyId.toString() !== hr.companyId.toString()) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const results = await AssessmentResult.find({ assessmentId: assessment._id })
+      .populate({ 
+        path: 'studentId', 
+        populate: { path: 'userId', select: 'name email' } 
+      })
+      .sort({ totalScore: -1 });
+
+    const formatted = results.map(r => ({
+      id: r._id,
+      studentName: r.studentId?.userId?.name,
+      studentEmail: r.studentId?.userId?.email,
+      rollNumber: r.studentId?.rollNumber,
+      branch: r.studentId?.branch,
+      totalScore: r.totalScore,
+      totalMarks: r.totalMarks,
+      percentage: r.percentage,
+      passed: r.passed,
+      timeTaken: r.timeTaken,
+      submittedAt: r.submittedAt
+    }));
+
+    res.json({
+      assessmentTitle: assessment.title,
+      passingMarks: assessment.passingMarks,
+      totalMarks: assessment.totalMarks,
+      totalAttempts: formatted.length,
+      passedCount: formatted.filter(r => r.passed).length,
+      failedCount: formatted.filter(r => !r.passed).length,
+      results: formatted
+    });
+  } catch (error) {
+    console.error('HR get all results error:', error);
+    res.status(500).json({ message: 'Failed to fetch results' });
+  }
+});
+
+// ─── ADMIN: Update passing marks for assessment ───────────────────────────────
+router.put('/admin/update-passing-marks/:assessmentId', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    const { passingMarks } = req.body;
+
+    if (passingMarks === undefined || passingMarks < 0) {
+      return res.status(400).json({ message: 'Invalid passing marks' });
+    }
+
+    const assessment = await Assessment.findById(req.params.assessmentId);
+    if (!assessment) return res.status(404).json({ message: 'Assessment not found' });
+
+    if (passingMarks > assessment.totalMarks) {
+      return res.status(400).json({ message: 'Passing marks cannot exceed total marks' });
+    }
+
+    assessment.passingMarks = passingMarks;
+    await assessment.save();
+
+    // Re-evaluate all existing results with new passing marks
+    const results = await AssessmentResult.find({ assessmentId: assessment._id });
+    for (const result of results) {
+      result.passed = result.totalScore >= passingMarks;
+      await result.save();
+    }
+
+    res.json({ 
+      message: 'Passing marks updated successfully',
+      passingMarks,
+      totalMarks: assessment.totalMarks,
+      resultsUpdated: results.length
+    });
+  } catch (error) {
+    console.error('Update passing marks error:', error);
+    res.status(500).json({ message: 'Failed to update passing marks' });
+  }
+});
+
 module.exports = router;

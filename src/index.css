@@ -567,7 +567,7 @@
    ========================================== */
 
 .card-hover {
-  @apply transition-all duration-300 hover:shadow-professional-lg hover:-translate-y-1 hover:scale-[1.02];
+  @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02];
 }
 
 .button-hover {
