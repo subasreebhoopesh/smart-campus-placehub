@@ -2,6 +2,16 @@
 // Base URL from environment variable or default to localhost
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+// Log the API URL for debugging (only in production to see what's being used)
+if (import.meta.env.PROD) {
+  console.log('🌐 Production API URL:', API_BASE_URL);
+  console.log('🔧 Environment Variables:', {
+    VITE_API_URL: import.meta.env.VITE_API_URL,
+    MODE: import.meta.env.MODE,
+    PROD: import.meta.env.PROD
+  });
+}
+
 // Helper to get auth token
 const getToken = (): string | null => {
   const token = localStorage.getItem('token');
