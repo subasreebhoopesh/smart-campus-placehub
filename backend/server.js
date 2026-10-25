@@ -10,13 +10,13 @@ const app = express();
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(compression());
-const allowedOrigins = [
-  'http://localhost:8080',
-  'http://localhost:5173',
-  'https://smart-campus-placehub.vercel.app',
-  process.env.FRONTEND_URL
-].filter(Boolean);
-app.use(cors({ origin: function(o,cb){ if(!o||allowedOrigins.includes(o)) return cb(null,true); cb(new Error('CORS')); }, credentials:true, methods:['GET','POST','PUT','PATCH','DELETE','OPTIONS'], allowedHeaders:['Content-Type','Authorization'] }));
+// Allow all origins for now (production should restrict this)
+app.use(cors({ 
+  origin: true, 
+  credentials: true, 
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'], 
+  allowedHeaders: ['Content-Type','Authorization'] 
+}));
 app.use(express.json({ limit:'10mb' }));
 app.use(express.urlencoded({ extended:true }));
 app.get('/api/health',(req,res)=>res.status(200).json({status:'ok',database:mongoose.connection.readyState===1?'connected':'disconnected'}));
