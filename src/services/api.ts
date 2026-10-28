@@ -1,6 +1,8 @@
 // API Service for Backend Integration
-// Base URL from environment variable or default to localhost
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// Use production backend URL for deployed app, localhost for development
+const API_BASE_URL = import.meta.env.PROD 
+  ? 'https://smart-campus-placehub.onrender.com/api'
+  : 'http://localhost:3001/api';
 
 // Log the API URL for debugging (only in production to see what's being used)
 if (import.meta.env.PROD) {
